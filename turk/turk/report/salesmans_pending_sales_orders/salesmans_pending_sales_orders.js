@@ -1,0 +1,37 @@
+// Copyright (c) 2016, RC and contributors
+// For license information, please see license.txt
+/* eslint-disable */
+
+frappe.query_reports["Salesmans Pending Sales Orders"] = {
+	"filters": [
+		{
+			"fieldname": "company",
+			"label": __("Company"),
+			"fieldtype": "Link",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "fdate",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+			"default": get_today(),
+			"reqd": 1
+		},
+		{
+			"fieldname": "tdate",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+			"default": get_today(),
+			"reqd": 1
+		},
+		{
+			"fieldname": "customer_group",
+			"label": __("Customer Group"),
+			"fieldtype": "Link",
+			"default": "Cash Customer",
+			"options": "Customer Group",
+			"reqd": 1
+		}
+	]
+}

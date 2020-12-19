@@ -1,0 +1,229 @@
+{
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:property_name",
+ "creation": "2019-06-11 18:29:41.287409",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "property_name",
+  "type",
+  "covered_area",
+  "column_break_4",
+  "bedrooms",
+  "bathrooms",
+  "kitchens",
+  "property_potential",
+  "tiles_qty",
+  "fittings_qty",
+  "literates_qty",
+  "accessories_qty",
+  "kitchen_appliances_qty",
+  "column_break_13",
+  "tiles_rate",
+  "fittings_rate",
+  "literates_rate",
+  "accessories_rate",
+  "kitchen_appliances_rate",
+  "column_break_19",
+  "tiles_amount",
+  "fittings_amount",
+  "literates_amount",
+  "accessories_amount",
+  "kitchen_appliances_amount",
+  "section_break_25",
+  "total_potential"
+ ],
+ "fields": [
+  {
+   "fieldname": "property_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "\nResidential\nCommercial"
+  },
+  {
+   "fieldname": "covered_area",
+   "fieldtype": "Data",
+   "label": "Covered Area"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bedrooms",
+   "fieldtype": "Data",
+   "label": "No of Bedrooms"
+  },
+  {
+   "fieldname": "bathrooms",
+   "fieldtype": "Data",
+   "label": "No of Bathrooms"
+  },
+  {
+   "fieldname": "kitchens",
+   "fieldtype": "Data",
+   "label": "Kitchens"
+  },
+  {
+   "fieldname": "property_potential",
+   "fieldtype": "Section Break",
+   "label": "Property Potential"
+  },
+  {
+   "fieldname": "tiles_qty",
+   "fieldtype": "Int",
+   "label": "Tiles QTY"
+  },
+  {
+   "fieldname": "fittings_qty",
+   "fieldtype": "Int",
+   "label": "Fittings QTY"
+  },
+  {
+   "fieldname": "literates_qty",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Literates QTY"
+  },
+  {
+   "fieldname": "accessories_qty",
+   "fieldtype": "Int",
+   "label": "Accessories QTY"
+  },
+  {
+   "fieldname": "kitchen_appliances_qty",
+   "fieldtype": "Int",
+   "label": "Kitchen Appliances"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tiles_rate",
+   "fieldtype": "Currency",
+   "label": "Tile Rate"
+  },
+  {
+   "fieldname": "fittings_rate",
+   "fieldtype": "Currency",
+   "label": "Fittings Rate"
+  },
+  {
+   "fieldname": "literates_rate",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Literates Rate"
+  },
+  {
+   "fieldname": "accessories_rate",
+   "fieldtype": "Currency",
+   "label": "Accessories Rate"
+  },
+  {
+   "fieldname": "kitchen_appliances_rate",
+   "fieldtype": "Currency",
+   "label": "Kitchen Appliances Rate"
+  },
+  {
+   "fieldname": "column_break_19",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tiles_amount",
+   "fieldtype": "Currency",
+   "label": "Tile Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fittings_amount",
+   "fieldtype": "Currency",
+   "label": "Fittings Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "literates_amount",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Literates Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "accessories_amount",
+   "fieldtype": "Currency",
+   "label": "Accessories Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "kitchen_appliances_amount",
+   "fieldtype": "Currency",
+   "label": "Kitchen Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_25",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_potential",
+   "fieldtype": "Currency",
+   "label": "Total Potential (Business)",
+   "read_only": 1
+  }
+ ],
+ "icon": "fa fa-certificate",
+ "modified": "2020-08-11 10:32:35.938073",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Property Detail",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Marketing Manager TC",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Marketing Officer TC",
+   "share": 1
+  }
+ ],
+ "search_fields": "property_name",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "property_name",
+ "track_changes": 1,
+ "sync_on_migrate": 1
+}

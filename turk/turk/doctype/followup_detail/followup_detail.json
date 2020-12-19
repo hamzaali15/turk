@@ -1,0 +1,118 @@
+{
+ "creation": "2019-06-23 13:16:29.804463",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "re_visit_date",
+  "next_visit_date",
+  "description",
+  "column_break_4",
+  "owner_sms_cell",
+  "architect_sms_cell",
+  "contractor_cell_no",
+  "contact_type",
+  "attach_image",
+  "image",
+  "section_break_10",
+  "sms_message",
+  "send_message"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "re_visit_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date/Re-Visit Date",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "next_visit_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Next Visit Date",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1,
+   "set_only_once": 1,
+   "width": "729"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "owner_sms_cell",
+   "fieldtype": "Data",
+   "label": "Owner SMS Cell",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "architect_sms_cell",
+   "fieldtype": "Data",
+   "label": "Architect SMS Cell",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "contractor_cell_no",
+   "fieldtype": "Data",
+   "label": "Contractor Cell No",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "contact_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Contact Type",
+   "options": "\nCall\nCall + SMS\nCall Not Answered\nSMS Only\nCall Not Picked & SMS Sent\nEmail\nWhatsApp",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "attach_image",
+   "fieldtype": "Attach Image",
+   "label": "Attach Image",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Image",
+   "label": "Image",
+   "options": "attach_image"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sms_message",
+   "fieldtype": "Small Text",
+   "label": "SMS Message",
+   "set_only_once": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "send_message",
+   "fieldtype": "Check",
+   "label": "Send Message",
+   "set_only_once": 1
+  }
+ ],
+ "image_field": "attach_image",
+ "istable": 1,
+ "modified": "2020-08-12 15:10:02.111795",
+ "modified_by": "Administrator",
+ "module": "Tile Select",
+ "name": "Followup Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,120 @@
+{
+ "creation": "2020-09-22 19:32:51.545350",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sales_order",
+  "customer",
+  "customer_name",
+  "company",
+  "reload_items_btn",
+  "column_break_3",
+  "update_items_btn",
+  "section_break_3",
+  "items",
+  "total",
+  "new_total",
+  "difference"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_bulk_edit": 1,
+   "description": "1. Don't change/delete items in existing rows, just change their qty or rate. \n\n2. Add a new item in a new row to update the Sales Order.",
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "SO Updation Item"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "sales_order",
+   "fieldname": "reload_items_btn",
+   "fieldtype": "Button",
+   "label": "Reload items"
+  },
+  {
+   "fieldname": "update_items_btn",
+   "fieldtype": "Button",
+   "label": "Update Items",
+   "width": "250px"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Data",
+   "label": "Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_total",
+   "fieldtype": "Data",
+   "label": "New Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "label": "Difference",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "sales_order.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "sales_order.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "issingle": 1,
+ "modified": "2020-10-18 16:34:37.264184",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Sales Order Updation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "sync_on_migrate": 1
+}

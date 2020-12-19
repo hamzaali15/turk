@@ -1,0 +1,124 @@
+{
+ "add_total_row": 0,
+ "creation": "2020-10-02 14:20:05.919686",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2020-10-02 14:20:05.919686",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Salesmans Pending Sales Orders",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Order",
+ "report_name": "Salesmans Pending Sales Orders",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Salesman TC"
+  },
+  {
+   "role": "Branch Manager TC"
+  },
+  {
+   "role": "Warehouse Incharge TC"
+  },
+  {
+   "role": "Delivery Officer TC"
+  },
+  {
+   "role": "Sales Manager TC"
+  },
+  {
+   "role": "Sales Director TC"
+  },
+  {
+   "role": "Asst. Accountant TC"
+  },
+  {
+   "role": "Manager Accounts TC"
+  },
+  {
+   "role": "Cashier TC"
+  },
+  {
+   "role": "Reception TC"
+  },
+  {
+   "role": "Director TC"
+  },
+  {
+   "role": "Delivery Manager TC"
+  },
+  {
+   "role": "Cashier HO TC"
+  },
+  {
+   "role": "Single Director TC"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Return Officer TC"
+  },
+  {
+   "role": "Display Incharge TC"
+  },
+  {
+   "role": "Purchase Manager TC"
+  },
+  {
+   "role": "Recovery Officer TC"
+  },
+  {
+   "role": "Internee TC"
+  },
+  {
+   "role": "Office Assistant TC"
+  },
+  {
+   "role": "Purchase Manager View TC"
+  },
+  {
+   "role": "Assistant Purchase Manager TC"
+  },
+  {
+   "role": "Allow Delivery TC"
+  },
+  {
+   "role": "Stock User TC"
+  },
+  {
+   "role": "Analytics TC"
+  },
+  {
+   "role": "Marketing Officer TC"
+  },
+  {
+   "role": "System Manager TC"
+  },
+  {
+   "role": "Salesman TC (Testing)"
+  }
+ ],
+ "sync_on_migrate": 1
+}

@@ -1,0 +1,31 @@
+{
+ "custom_fields": [],
+ "custom_perms": [],
+ "doctype": "Payment Schedule",
+ "property_setters": [
+  {
+   "_assign": null,
+   "_comments": null,
+   "_liked_by": null,
+   "_user_tags": null,
+   "creation": "2018-11-06 18:11:11.540980",
+   "default_value": null,
+   "doc_type": "Payment Schedule",
+   "docstatus": 0,
+   "doctype_or_field": "DocField",
+   "field_name": "due_date",
+   "idx": 0,
+   "modified": "2018-11-06 18:11:11.540980",
+   "modified_by": "saeed@resourcefactors.com",
+   "name": "Payment Schedule-due_date-default",
+   "owner": "saeed@resourcefactors.com",
+   "parent": null,
+   "parentfield": null,
+   "parenttype": null,
+   "property": "default",
+   "property_type": "Text",
+   "value": ""
+  }
+ ],
+ "sync_on_migrate": 1
+}

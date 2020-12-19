@@ -1,0 +1,63 @@
+{
+ "creation": "2020-05-06 20:58:30.558630",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "service_item",
+  "type",
+  "frequency",
+  "expense_amount",
+  "task_assign_by"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_item",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Time Out",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Time In",
+   "reqd": 1
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense_amount",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Visit Place",
+   "reqd": 1
+  },
+  {
+   "fieldname": "task_assign_by",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Task Assign By",
+   "options": "\nDirector\nSales Director\nSales Manger\nSalesman\nMarketing Manager\nAsst. Marketing Manager\nOperations Manager\nBranch Manager\nHead Office\nWarehouse In Charge\nCashier"
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-05-06 21:23:07.341408",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Visit Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "sync_on_migrate": 1
+}

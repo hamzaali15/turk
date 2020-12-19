@@ -1,0 +1,525 @@
+<style>
+    .table-condensed {
+        font-size:9pt;
+    }
+    .table-condensed th, .table-condensed td {
+        vertical-align:middle !important;
+    }
+    </style>
+
+    {% function fmt(value, type) {
+        var res = frappe.format(value, {fieldtype: type, precision: 2}, {always_show_decimals: true, inline: true});
+        if (!res && type == "Currency") {
+            return "0.00";
+        } else {
+            return res;
+        }
+    } %}
+
+    {% function get_sum(details, parentfield, field, type) {
+        var sum = 0;
+        $.each(details || [], function(i, doc) {
+            $.each(doc[parentfield] || [], function(j, d) {
+                sum += d[field];
+            });
+        });
+        return fmt(sum, type);
+    } %}
+
+    {% var i = 0 %}
+
+    <!-- Sales Order Details -->
+    <div class="row">
+        <div class="form-column col-sm-6">
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Sales Order Date</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].transaction_date, "Date") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Location</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].cost_center) }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Salesman</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].owner) }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Customer</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].customer_name) }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">No of Material Request</label>
+                <div class="control-value like-disabled-input bold">
+                    {% if(doc_details["Material Request"]) { %}
+                        {{ doc_details["Material Request"].length }}
+                    {% } else { %}
+                        0
+                    {% } %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">No of Stock Entries</label>
+                <div class="control-value like-disabled-input bold">
+                    {% if(doc_details["Stock Entry"]) { %}
+                        {{ doc_details["Stock Entry"].length }}
+                    {% } else { %}
+                        0
+                    {% } %}
+                </div>
+            </div>
+        </div>
+        <div class="form-column col-sm-6">
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Sales Order Total</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].rounded_total, "Currency") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Total Payment</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].total_payment_amount, "Currency") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Sales Return Total</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].total_return_amount, "Currency") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Total Return Payment</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].total_refund_amount, "Currency") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">Outstanding Amount</label>
+                <div class="control-value like-disabled-input bold">{{ fmt(doc_details["Sales Order"][0].total_outstanding_amount, "Currency") }}</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" style="padding-right: 0px;">No of Returns</label>
+                <div class="control-value like-disabled-input bold">
+                    {% if(doc_details["Sales Return"]) { %}
+                        {{ doc_details["Sales Return"].length }}
+                    {% } else { %}
+                        0
+                    {% } %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Sales Order Item Details -->
+    <h3>Sales Order Details</h3>
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Item Name</th>
+                    <th style="text-align:right;">Net Rate</th>
+                    <th style="text-align:right;">Total Weight</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                    <th style="text-align:right;">Net Amount</th>
+                    <th style="text-align:right;">Remaining Qty</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for so in sales_order_details %}
+                    {% i = 0 %}
+                    {% for so_item in so.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{so.items.length}}" style="white-space:nowrap;">{{ fmt(so.name) }}</td>
+                        <td rowspan="{{so.items.length}}">{{ fmt(so.status) }}</td>
+                        {% } %}
+                        <td>{{ fmt(so_item.item_name) }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.net_rate, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.total_weight, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.pieces, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.net_amount, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(so_item.remaining_qty, "Float") }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "net_rate", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "total_weight", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "pieces", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "net_amount", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_order_details, "items", "remaining_qty", "Float") }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+
+    <!-- Material Request Details -->
+    <h3>Material Request</h3>
+    {% if (material_request_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Trans. Date</th>
+                    <th>Item Name</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mr in material_request_details %}
+                    {% i = 0 %}
+                    {% for mr_item in mr.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{mr.items.length}}" style="white-space:nowrap;">{{ fmt(mr.name) }}</td>
+                        <td rowspan="{{mr.items.length}}">{{ fmt(mr.status) }}</td>
+                        <td rowspan="{{mr.items.length}}">{{ fmt(mr.transaction_date, "Date") }}</td>
+                        {% } %}
+                        <td>{{ fmt(mr_item.item_name) }}</td>
+                        <td style="text-align:right;">{{ fmt(mr_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(mr_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(mr_item.pieces, "Float") }}</td>
+                        <td>{{ fmt(mr_item.custom_warehouse_name) }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(material_request_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(material_request_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(material_request_details, "items", "pieces", "Float") }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}
+
+    <!-- Stock Entry Details -->
+    <h3>Stock Entry</h3>
+    {% if (stock_entry_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Transfer Type</th>
+                    <th>Posting Date</th>
+                    <th>Item Name</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Material Request</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for se in stock_entry_details %}
+                    {% i = 0 %}
+                    {% for se_item in se.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{se.items.length}}" style="white-space:nowrap;">{{ fmt(se.name) }}</td>
+                        <td rowspan="{{se.items.length}}">{{ fmt(se.transfer_type) }}</td>
+                        <td rowspan="{{se.items.length}}">{{ fmt(se.posting_date, "Date") }}</td>
+                        {% } %}
+                        <td>{{ fmt(se_item.item_name) }}</td>
+                        <td>{{ fmt(se_item.s_warehouse) }}</td>
+                        <td>{{ fmt(se_item.t_warehouse) }}</td>
+                        <td>{{ fmt(se_item.material_request) }}</td>
+                        <td style="text-align:right;">{{ fmt(se_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(se_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(se_item.pieces, "Float") }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(stock_entry_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(stock_entry_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(stock_entry_details, "items", "pieces", "Float") }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}
+
+
+    <!-- Delivery Note Details -->
+    <h3>Delivery Note</h3>
+    {% if (delivery_note_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Posting Date</th>
+                    <th>Item Name</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for de in delivery_note_details %}
+                    {% i = 0 %}
+                    {% for de_item in de.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{de.items.length}}" style="white-space:nowrap;">{{ fmt(de.name) }}</td>
+                        <td rowspan="{{de.items.length}}">{{ fmt(de.status) }}</td>
+                        <td rowspan="{{de.items.length}}">{{ fmt(de.posting_date, "Date") }}</td>
+                        {% } %}
+                        <td>{{ fmt(de_item.item_name) }}</td>
+                        <td style="text-align:right;">{{ fmt(de_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(de_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(de_item.pieces, "Float") }}</td>
+                        <td>{{ fmt(de_item.warehouse) }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(delivery_note_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(delivery_note_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(delivery_note_details, "items", "pieces", "Float") }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}
+
+
+    <!-- Sales Invoice Details -->
+    <h3>Sales Invoice</h3>
+    {% if (sales_invoice_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Posting Date</th>
+                    <th>Item Name</th>
+                    <th>Net Rate</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                    <th style="text-align:right;">Net Amount</th>
+                    <th>Warehouse</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for si in sales_invoice_details %}
+                    {% i = 0 %}
+                    {% for si_item in si.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{si.items.length}}" style="white-space:nowrap;">{{ fmt(si.name) }}</td>
+                        <td rowspan="{{si.items.length}}">{{ fmt(si.status) }}</td>
+                        <td rowspan="{{si.items.length}}">{{ fmt(si.posting_date, "Date") }}</td>
+                        {% } %}
+                        <td>{{ fmt(si_item.item_name) }}</td>
+                        <td>{{ fmt(si_item.net_rate, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.pieces, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.net_amount, "Currency") }}</td>
+                        <td>{{ fmt(si_item.warehouse) }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(sales_invoice_details, "items", "net_rate", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_invoice_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_invoice_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_invoice_details, "items", "pieces", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_invoice_details, "items", "net_amount", "Currency") }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}
+
+
+    <!-- Sales Return Details -->
+    <h3>Sales Return</h3>
+    {% if (sales_return_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Posting Date</th>
+                    <th>Created By</th>
+
+                    <th>Item Name</th>
+                    <th>Net Rate</th>
+                    <th style="text-align:right;">Qty</th>
+                    <th style="text-align:right;">Boxes</th>
+                    <th style="text-align:right;">Pieces</th>
+                    <th style="text-align:right;">Breakge Boxes</th>
+                    <th style="text-align:right;">Breakage Pieces</th>
+                    <th style="text-align:right;">Net Amount</th>
+                    <th>Warehouse</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for si in sales_return_details %}
+                    {% i = 0 %}
+                    {% for si_item in si.items %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{si.items.length}}" style="white-space:nowrap;">{{ fmt(si.name) }}</td>
+                        <td rowspan="{{si.items.length}}">{{ fmt(si.status) }}</td>
+                        <td rowspan="{{si.items.length}}">{{ fmt(si.posting_date, "Date") }}</td>
+                        <td rowspan="{{si.items.length}}">{{ flt(si.owner) }}</td>
+                        {% } %}
+                        <td>{{ fmt(si_item.item_name) }}</td>
+                        <td>{{ fmt(si_item.net_rate, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.qty, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.pieces, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.breakage_boxes, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.breakage_pieces, "Float") }}</td>
+                        <td style="text-align:right;">{{ fmt(si_item.net_amount, "Currency") }}</td>
+                        <td>{{ fmt(si_item.warehouse) }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "net_rate", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "qty", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "pieces", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "breakage_boxes", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "breakage_pieces", "Float") }}</td>
+                    <td style="text-align:right;">{{ get_sum(sales_return_details, "items", "net_amount", "Currency") }}</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}
+
+
+    <!-- Payment Entry Details -->
+    <h3>Payment Entry</h3>
+    {% if (paymeny_entry_details) { %}
+    <div>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mode of Payment</th>
+                    <th>Payment Type</th>
+                    <th>Party Name</th>
+
+                    <th>Reference Name</th>
+                    <th style="text-align:right;">Total Amount</th>
+                    <th style="text-align:right;">Outstanding Amount</th>
+                    <th style="text-align:right;">Allocated Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pe in paymeny_entry_details %}
+                    {% i = 0 %}
+                    {% for pe_ref in pe.references %}
+                    <tr>
+                        {% if (i === 0) { %}
+                        <td rowspan="{{pe.references.length}}" style="white-space:nowrap;">{{ fmt(pe.name) }}</td>
+                        <td rowspan="{{pe.references.length}}">{{ fmt(pe.mode_of_payment) }}</td>
+                        <td rowspan="{{pe.references.length}}">{{ fmt(pe.payment_type) }}</td>
+                        <td rowspan="{{pe.references.length}}">{{ fmt(pe.party_name) }}</td>
+                        {% } %}
+                        <td>{{ fmt(pe_ref.reference_name) }}</td>
+                        <td style="text-align:right;">{{ fmt(pe_ref.total_amount, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(pe_ref.outstanding_amount, "Currency") }}</td>
+                        <td style="text-align:right;">{{ fmt(pe_ref.allocated_amount, "Currency") }}</td>
+                    </tr>
+                    {% i++ %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align:right;"><strong>Total</strong></td>
+                    <td style="text-align:right;">{{ get_sum(paymeny_entry_details, "references", "total_amount", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(paymeny_entry_details, "references", "outstanding_amount", "Currency") }}</td>
+                    <td style="text-align:right;">{{ get_sum(paymeny_entry_details, "references", "allocated_amount", "Currency") }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    {% } else { %}
+    <p>No document Created </p>
+    {% } %}

@@ -1,0 +1,130 @@
+{
+ "creation": "2020-09-22 19:55:03.830545",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "docname",
+  "item_name",
+  "delivery_date",
+  "quantity_and_rate_section",
+  "qty",
+  "total_qty",
+  "def_boxes",
+  "def_pieces",
+  "column_break_9",
+  "sqm",
+  "boxes",
+  "pieces",
+  "rate",
+  "conversion_factor"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "boxes",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Boxes"
+  },
+  {
+   "fieldname": "pieces",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Pieces"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "options": "currency"
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Delivery Date"
+  },
+  {
+   "fieldname": "conversion_factor",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "UOM Conversion Factor"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "total_qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Available Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sqm",
+   "fieldtype": "Float",
+   "label": "SQM"
+  },
+  {
+   "fetch_from": "item_code.boxes",
+   "fieldname": "def_boxes",
+   "fieldtype": "Data",
+   "label": "SQM/SQFT Per Box",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "item_code.pieces",
+   "fieldname": "def_pieces",
+   "fieldtype": "Data",
+   "label": "Pieces Per Box",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_and_rate_section",
+   "fieldtype": "Section Break",
+   "label": "Quantity and Rate"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "docname",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "docname"
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-09-27 01:57:01.507491",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "SO Updation Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "sync_on_migrate": 1
+}

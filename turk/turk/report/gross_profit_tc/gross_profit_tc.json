@@ -1,0 +1,46 @@
+{
+ "add_total_row": 0,
+ "creation": "2020-06-15 20:55:40.785427",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2020-10-02 16:34:01.049056",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Gross Profit TC",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Invoice",
+ "report_name": "Gross Profit TC",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Sales Director TC"
+  },
+  {
+   "role": "Asst. Accountant TC"
+  },
+  {
+   "role": "Manager Accounts TC"
+  },
+  {
+   "role": "Director TC"
+  },
+  {
+   "role": "Single Director TC"
+  },
+  {
+   "role": "Assistant Purchase Manager TC"
+  }
+ ],
+ "sync_on_migrate": 1
+}

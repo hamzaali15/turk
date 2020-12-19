@@ -1,0 +1,52 @@
+{
+ "add_total_row": 1,
+ "creation": "2019-01-04 18:27:25.564734",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2020-10-03 17:56:05.650568",
+ "modified_by": "Administrator",
+ "module": "TURK",
+ "name": "Stock Balance TC",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Stock Ledger Entry",
+ "report_name": "Stock Balance TC",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Warehouse Incharge TC"
+  },
+  {
+   "role": "Delivery Officer TC"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Manager Accounts TC"
+  },
+  {
+   "role": "Director TC"
+  },
+  {
+   "role": "Delivery Manager TC"
+  },
+  {
+   "role": "Single Director TC"
+  },
+  {
+   "role": "Return Officer TC"
+  }
+ ],
+ "sync_on_migrate": 1
+}
