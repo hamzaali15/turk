@@ -488,15 +488,15 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 		})
 
 
-def validate_date(doc, method):
-	if not doc.set_posting_time:
-		doctypes = ["Sales Order", "Purchase Order","Quotation"]
-		if doc.doctype in doctypes:
-			doc.transaction_date = today()
-		elif hasattr(doc, 'posting_date'):
-			doc.posting_date = today()
-		if hasattr(doc, 'posting_time'):
-			doc.posting_time = nowtime()
+# #def validate_date(doc, method):
+# 	if not doc.set_posting_time:
+# 		doctypes = ["Sales Order", "Purchase Order","Quotation"]
+# 		if doc.doctype in doctypes:
+# 			doc.transaction_date = today()
+# 		elif hasattr(doc, 'posting_date'):
+# 			doc.posting_date = today()
+# 		if hasattr(doc, 'posting_time'):
+# 			doc.posting_time = nowtime()
 
 
 @frappe.whitelist()

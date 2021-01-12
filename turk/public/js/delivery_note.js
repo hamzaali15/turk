@@ -48,9 +48,9 @@ frappe.ui.form.on("Delivery Note", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
 		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
 		var tcost_center = "Test";
-		if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot"); }
+	//	if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot"); }
 		$.each(frm.doc.items || [], function (i, d) {
-			if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot") { d.warehouse = frm.doc.custom_delivery_warehouse; }
+		//	if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot") { d.warehouse = frm.doc.custom_delivery_warehouse; }
 			frappe.call({
 				method: "frappe.client.get",
 				args: {
@@ -66,7 +66,7 @@ frappe.ui.form.on("Delivery Note", "validate", function (frm, cdt, cdn) {
 		});
 
 		calculate_total_boxes(frm);
-		if (frm.doc.custom_delivery_warehouse.includes("Delivery Depot -")) { frm.set_value("custom_delivery_warehouse", "Delivery Depot"); }
+//		if (frm.doc.custom_delivery_warehouse.includes("Delivery Depot -")) { frm.set_value("custom_delivery_warehouse", "Delivery Depot"); }
 		cur_frm.refresh_field("items");
 
 	}

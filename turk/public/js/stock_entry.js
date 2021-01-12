@@ -1,11 +1,11 @@
 {% include "turk/public/js/utils.js" %}
 
 frappe.ui.form.on("Stock Entry", "before_submit", function (frm, cdt, cdn) {
-	if (frm.doc.docstatus == 0) {
-		if (frm.doc.purpose != "Material Transfer") {
-			frappe.throw("You cannot submit Stock Entry other than Material Transfer. Please change purpose to Material Transfer ");
-			frappe.validated = false;
-		}
+	 if (frm.doc.docstatus == 0) {
+	// 	if (frm.doc.purpose != "Material Transfer") {
+	// 		frappe.throw("You cannot submit Stock Entry other than Material Transfer. Please change purpose to Material Transfer ");
+	// 		frappe.validated = false;
+	// 	}
 		var is_warehouse_incharge = search_in_roles(frappe.user_roles, "Warehouse Incharge TC")
 		$.each(frm.doc.items || [], function (i, d) {
 			if (is_warehouse_incharge && (d.t_warehouse.includes("Delivery Depot"))) {
@@ -90,24 +90,24 @@ frappe.ui.form.on("Stock Entry", "validate", function (frm, cdt, cdn) {
 	}
 });
 
-function SetUserWarehouse(source) {
-	if (cur_frm.doc.docstatus == 0) {
-		frappe.call({
-			method: "frappe.client.get",
-			args: { doctype: "User", filters: { "name": frappe.session.user }, fieldname: "user_warehouse" },
-			callback: function (r) {
-				if (r.message.user_warehouse) {
-					if (source == "To") {
-						cur_frm.set_value('to_warehouse', r.message.user_warehouse);
-					}
-					if (source == "From") {
-						cur_frm.set_value('from_warehouse', r.message.user_warehouse);
-					}
-				}
-			}
-		})
-	}
-}
+// function SetUserWarehouse(source) {
+// 	if (cur_frm.doc.docstatus == 0) {
+// 		frappe.call({
+// 			method: "frappe.client.get",
+// 			args: { doctype: "User", filters: { "name": frappe.session.user }, fieldname: "user_warehouse" },
+// 			callback: function (r) {
+// 				if (r.message.user_warehouse) {
+// 					if (source == "To") {
+// 						cur_frm.set_value('to_warehouse', r.message.user_warehouse);
+// 					}
+// 					if (source == "From") {
+// 						cur_frm.set_value('from_warehouse', r.message.user_warehouse);
+// 					}
+// 				}
+// 			}
+// 		})
+// 	}
+// }
 
 frappe.ui.form.on('Stock Entry Detail',
 	{

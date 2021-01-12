@@ -7,12 +7,12 @@ frappe.ui.form.on("Sales Order", {
 	onload: function (frm) {
 		set_address_query(frm, frm.doc.customer);
 	},
-	company: function (frm) {
-		if (frm.doc.docstatus == 0) {
-			var ret_obj = setseries(frm.doc.company);
-			frm.set_value("naming_series", ret_obj.series);
-		}
-	},
+	//company: function (frm) {
+	//	if (frm.doc.docstatus == 0) {
+	//		var ret_obj = setseries(frm.doc.company);
+	//		frm.set_value("naming_series", ret_obj.series);
+	//	}
+	//},
 	delivery_date: function (frm) {
 		if (frm.doc.docstatus == 0) {
 			$.each(frm.doc.items || [], function (i, d) { d.delivery_date = frm.doc.delivery_date; })
@@ -27,36 +27,35 @@ frappe.ui.form.on("Sales Order", {
 		}
 	}
 });
-
 frappe.ui.form.on("Sales Order", "onload", function (frm, cdt, cdn) {
 
 	setup_warehouse_query('warehouse', frm);
 
-	$.each(frm.doc.items || [], function (i, d) {
-		if (d.needs_approval) {
-			$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').css({ 'background-color': '#ffff99' });
-			$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').find('.grid-static-col').css({ 'background-color': '#ffff99' });
-		}
-		else {
-			$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').css({ 'background-color': '#ffffff' });
-			$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').find('.grid-static-col').css({ 'background-color': '#ffffff' });
-		}
-	})
+	// $.each(frm.doc.items || [], function (i, d) {
+	// 	if (d.needs_approval) {
+	// 		$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').css({ 'background-color': '#ffff99' });
+	// 		$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').find('.grid-static-col').css({ 'background-color': '#ffff99' });
+	// 	}
+	// 	else {
+	// 		$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').css({ 'background-color': '#ffffff' });
+	// 		$("div[data-fieldname=items]").find('div.grid-row[data-idx=' + d.idx + ']').find('.grid-static-col').css({ 'background-color': '#ffffff' });
+	// 	}
+	// })
 	if (frm.doc.docstatus == 0) {
 		calculate_total_boxes(frm);
-		frappe.call({
-			method: "frappe.client.get",
-			args: {
-				doctype: "User",
-				filters: { "name": frappe.session.user },
-				fieldname: "user_costcenter"
-			},
-			callback: function (r) {
-				if (r.message.user_costcenter) {
-					frappe.model.set_value(cdt, cdn, 'cost_center', r.message.user_costcenter);
-				}
-			}
-		})
+		// frappe.call({
+		// 	method: "frappe.client.get",
+		// 	args: {
+		// 		doctype: "User",
+		// 		filters: { "name": frappe.session.user },
+		// 		fieldname: "user_costcenter"
+		// 	},
+		// 	callback: function (r) {
+		// 		if (r.message.user_costcenter) {
+		// 			frappe.model.set_value(cdt, cdn, 'cost_center', r.message.user_costcenter);
+		// 		}
+		// 	}
+		// })
 
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
@@ -65,12 +64,12 @@ frappe.ui.form.on("Sales Order", "onload", function (frm, cdt, cdn) {
 		})
 	}
 
-	for (let item of frm.doc.items) {
-		if (item.needs_approval === 1 && item.custom_approver_role && in_list(frappe.user_roles, item.custom_approver_role)) {
-			var item_childtable = $(`div[data-name='${item.name}']`);
-			$(item_childtable).css('background-color', 'yellow');
-		}
-	}
+	// for (let item of frm.doc.items) {
+	// 	if (item.needs_approval === 1 && item.custom_approver_role && in_list(frappe.user_roles, item.custom_approver_role)) {
+	// 		var item_childtable = $(`div[data-name='${item.name}']`);
+	// 		$(item_childtable).css('background-color', 'yellow');
+	// 	}
+	///}
 });
 
 frappe.ui.form.on("Sales Order", "validate", function (frm, cdt, cdn) {
@@ -79,19 +78,19 @@ frappe.ui.form.on("Sales Order", "validate", function (frm, cdt, cdn) {
 	}
 	if (frm.doc.docstatus == 0) {
 		calculate_total_boxes(frm);
-		frappe.call({
-			method: "frappe.client.get",
-			args: {
-				doctype: "Address",
-				filters: { "name": frm.doc.customer_address },
-				fieldname: "territory"
-			},
-			callback: function (r) {
-				if (r.message.territory) {
-					frappe.model.set_value(cdt, cdn, 'territory', r.message.territory);
-				}
-			}
-		})
+		// frappe.call({
+		// 	method: "frappe.client.get",
+		// 	args: {
+		// 		doctype: "Address",
+		// 		filters: { "name": frm.doc.customer_address },
+		// 		fieldname: "territory"
+		// 	},
+		// 	callback: function (r) {
+		// 		if (r.message.territory) {
+		// 			frappe.model.set_value(cdt, cdn, 'territory', r.message.territory);
+		// 		}
+		// 	}
+		// })
 		var ret_obj = setseries(frm.doc.company);
 		frm.set_value("naming_series", ret_obj.series);
 		frm.set_value("customer_name", frm.doc.customer_name.toUpperCase());
@@ -104,10 +103,10 @@ frappe.ui.form.on("Sales Order", "validate", function (frm, cdt, cdn) {
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
 			if (d.sqm == d.boxes && d.pieces == d.boxes && d.def_boxes != 1 && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
-			get_approval_limit(d);
-			d.warehouse = ret_obj.twarehouse;
-			d.cost_center = frm.doc.cost_center;
-			frm.doc.set_warehouse = ret_obj.twarehouse;
+			// get_approval_limit(d);
+			// d.warehouse = ret_obj.twarehouse;
+			// d.cost_center = frm.doc.cost_center;
+			// frm.doc.set_warehouse = ret_obj.twarehouse;
 		})
 		validateBoxes(frm);
 	}
@@ -128,14 +127,14 @@ frappe.ui.form.on('Sales Order Item',
 		}
 	})
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "TURK": ret_obj.twarehouse = "Delivery Depot - TC"; ret_obj.series = "TC-SO-"; break;
+function setseries() {
+	var ret_obj = { twarehouse: "Delivery Depot - TC", series: "TC-SO-" };
+//	switch (company) {
+//		case "TURK": ret_obj.twarehouse = "Delivery Depot - TC"; ret_obj.series = "TC-SO-"; break;
 //		case "T.S ENTERPRISES": ret_obj.twarehouse = "Delivery Depot - TE"; ret_obj.series = "TE-SO-"; break;
 //		case "KALE FAISALABAD": ret_obj.twarehouse = "Delivery Depot - KF"; ret_obj.series = "KF-SO-"; break;
 //		case "TILE BAZAR": ret_obj.twarehouse = "Delivery Depot - TB"; ret_obj.series = "TB-SO-"; break;
-	}
+//	}
 	return ret_obj;
 }
 

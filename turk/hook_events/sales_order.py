@@ -58,11 +58,11 @@ def set_total_boxes(so):
 def check_to_allow_delivery(so, to_create):
 	so = frappe.get_doc("Sales Order", so)
 
-	if to_create == "Material Request":
-		if (not so.allow_delivery and so.advance_paid < so.rounded_total):
-			frappe.throw(_('Not allowed to create the Material Request before Payment'))
+	# if to_create == "Material Request":
+	# 	if (not so.allow_delivery and so.advance_paid < so.rounded_total):
+	# 		frappe.throw(_('Not allowed to create the Material Request before Payment'))
 
-	elif to_create == "Sales Invoice":
+	if to_create == "Sales Invoice":
 		if not so.allow_delivery:
 			if so.advance_paid < so.rounded_total:
 				frappe.throw(_('Not allowed to create the Sales Invoice before Payment'))

@@ -9,7 +9,6 @@
   "naming_series",
   "col1",
   "posting_date",
-  "amended_from",
   "section_break_4",
   "items"
  ],
@@ -40,15 +39,6 @@
    "in_list_view": 1,
    "label": "Date",
    "reqd": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Item Location",
-   "print_hide": 1,
-   "read_only": 1
   },
   {
    "fieldname": "section_break_4",
@@ -89,5 +79,5 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1,
- "sync_on_migrate": 1
+ "sync_on_migrate": 0
 }
