@@ -28,7 +28,7 @@ frappe.ui.form.on("Purchase Order", "validate", function (frm, cdt, cdn) {
 	validateBoxes(frm);
 	frm.set_value("naming_series", ret_obj.series);
 	$.each(frm.doc.items || [], function (i, d) {
-		d.warehouse = ret_obj.twarehouse;
+	//	d.warehouse = ret_obj.twarehouse;
 	})
 	calculate_total_boxes(frm);
 });
@@ -89,7 +89,7 @@ function setseries(company) {
 	return ret_obj;
 }
 
-ts.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.extend({
+turk.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.extend({
 	refresh: function (doc, cdt, cdn) {
 		this._super(doc);
 		var allow_receipt = false;
@@ -128,4 +128,4 @@ ts.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.exten
 	}
 });
 
-$.extend(cur_frm.cscript, new ts.buying.PurchaseOrderController({ frm: cur_frm }));
+$.extend(cur_frm.cscript, new turk.buying.PurchaseOrderController({ frm: cur_frm }));

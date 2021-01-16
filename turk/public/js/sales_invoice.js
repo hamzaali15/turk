@@ -3,11 +3,11 @@
 frappe.ui.form.on("Sales Invoice", "onload", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
 		if (frm.doc.is_return == 1) { frm.set_df_property("update_stock", "read_only", 1); }
-		frm.get_field("custom_delivery_warehouse").get_query = function (doc, cdt, cdn) {
-			return {
-				filters: { 'company': doc.company }
-			}
-		}
+	//	frm.get_field("custom_delivery_warehouse").get_query = function (doc, cdt, cdn) {
+	//		return {
+	//			filters: { 'company': doc.company }
+	//		}
+	//	}
 		$.each(frm.doc.items || [], function (i, d) {
 			if (!frm.doc.cust_sales_order_owner) {
 				get_sales_order_owner(d.sales_order);
@@ -57,7 +57,7 @@ frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 		}
 		var sales_order_no = "0";
 		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
-		if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot - TC"); }
+	//	if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot - TC"); }
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.item_group != 'Fixed Assets') {
 				if (d.qty == 0 || d.rate == 0) {
@@ -72,7 +72,7 @@ frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 				}
 			}
 			if (typeof d.sales_order !== "undefined") { sales_order_no = d.sales_order; }
-			if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot - TC") { d.warehouse = frm.doc.custom_delivery_warehouse; }
+		//	if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot - TC") { d.warehouse = frm.doc.custom_delivery_warehouse; }
 
 		})
 
@@ -142,29 +142,29 @@ frappe.ui.form.on('Sales Invoice', {
 			update_item_qty_based_on_sales_order(frm);
 		}
 	},
-	custom_delivery_warehouse: function (frm) {
-		$.each(frm.doc.items || [], function (i, d) {
-			frappe.model.set_value(d.doctype, d.name, "warehouse", frm.doc.custom_delivery_warehouse);
-		})
-	},
-	direct_delivery_from_warehouse: function (frm) {
-		if (frm.doc.direct_delivery_from_warehouse) {
-			frappe.call({
-				method: "frappe.client.get",
-				args: {
-					doctype: "User",
-					filters: { "name": frappe.session.user },
-					fieldname: "user_warehouse"
-				},
-				callback: function (r) {
-					if (r.message.user_warehouse) {
-						frm.set_value("custom_delivery_warehouse", r.message.user_warehouse);
-					}
-				}
-			})
-		}
-	}
-});
+	// custom_delivery_warehouse: function (frm) {
+	// 	$.each(frm.doc.items || [], function (i, d) {
+	// 		frappe.model.set_value(d.doctype, d.name, "warehouse", frm.doc.custom_delivery_warehouse);
+	// 	})
+	// },
+ //	direct_delivery_from_warehouse: function (frm) {
+// 		if (frm.doc.direct_delivery_from_warehouse) {
+// 			frappe.call({
+// 				method: "frappe.client.get",
+// 				args: {
+// 					doctype: "User",
+// 					filters: { "name": frappe.session.user },
+// 					fieldname: "user_warehouse"
+// 				},
+// 				callback: function (r) {
+// 					if (r.message.user_warehouse) {
+// 						frm.set_value("custom_delivery_warehouse", r.message.user_warehouse);
+// 					}
+// 				}
+// 			})
+// 		}
+// 	}
+ });
 
 frappe.ui.form.on('Sales Invoice Item',
 	{
