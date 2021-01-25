@@ -128,7 +128,7 @@ function CalculateSQM(crow, field, cdt, cdn) {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TT-DN-"; break;
+		case "Turk Tiles": ret_obj.series = "TT-DN-"; break;
 	}
 	return ret_obj;
 }

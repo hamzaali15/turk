@@ -11,22 +11,29 @@ frappe.ui.form.on("Purchase Order", {
 		}
 	},
 	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company);
-		frm.set_value("naming_series", ret_obj.series);
+		if(cur_frm.doc.__islocal!=undefined){
+			var ret_obj = setseries(frm.doc.company);
+			frm.set_value("naming_series", ret_obj.series);
+		}
 	}
 });
 frappe.ui.form.on("Purchase Order", "onload", function (frm, cdt, cdn) {
-	var ret_obj = setseries(frm.doc.company);
+	if(cur_frm.doc.__islocal!=undefined){
+	var ret_obj = setseries(frm.doc.company);	
 	frm.set_value("naming_series", ret_obj.series);
+	}
 	$.each(frm.doc.items || [], function (i, d) {
 		if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
 	})
+	
 });
 
 frappe.ui.form.on("Purchase Order", "validate", function (frm, cdt, cdn) {
+	if(cur_frm.doc.__islocal!=undefined){
 	var ret_obj = setseries(frm.doc.company);
-	validateBoxes(frm);
 	frm.set_value("naming_series", ret_obj.series);
+	}
+	validateBoxes(frm);	
 	$.each(frm.doc.items || [], function (i, d) {
 	//	d.warehouse = ret_obj.twarehouse;
 	})
@@ -79,9 +86,9 @@ function CalculateSQM(crow, field, cdt, cdn) {
 }
 
 function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
+	var ret_obj = {  series: "" };	
 	switch (company) {
-		case "TURK": ret_obj.twarehouse = "Head Office - TT"; ret_obj.series = "TT-PO-"; break;
+		case "Turk Tiles":  ret_obj.series = "TT-PO-"; break;
 	}
 	return ret_obj;
 }

@@ -155,7 +155,7 @@ function CalculateSQM(crow, field, cdt, cdn) {
 function setseries(company) {
 	var ret_obj = { series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TT-PR-"; break;
+		case "Turk Tiles": ret_obj.series = "TT-PR-"; break;
 	}
 
 	return ret_obj;
