@@ -81,10 +81,7 @@ function CalculateSQM(crow, field, cdt, cdn) {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.twarehouse = "Head Office - TC"; ret_obj.series = "TC-PO-"; break;
-//		case "T.S ENTERPRISES": ret_obj.twarehouse = "Head Office - TE"; ret_obj.series = "TE-PO-"; break;
-//		case "KALE FAISALABAD": ret_obj.twarehouse = "Head Office - KF"; ret_obj.series = "KF-PO-"; break;
-//		case "TILE BAZAR": ret_obj.twarehouse = "Head Office - TB"; ret_obj.series = "TB-PO-"; break;
+		case "TURK": ret_obj.twarehouse = "Head Office - TT"; ret_obj.series = "TT-PO-"; break;
 	}
 	return ret_obj;
 }

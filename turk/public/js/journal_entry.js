@@ -13,11 +13,7 @@ frappe.ui.form.on('Journal Entry', {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-JV-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-JV-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-JV-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-JV-"; break;
-//		case "OWNERS LTD": ret_obj.series = "OL-JV-"; break;
+		case "TURK": ret_obj.series = "TT-JV-"; break;
 	}
 	return ret_obj;
 }

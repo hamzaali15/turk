@@ -23,10 +23,7 @@ frappe.ui.form.on('Payment Entry', {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-SQT-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-SQT-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-SQT-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-SQT-"; break;
+		case "TURK": ret_obj.series = "TT-SQT-"; break;
 	}
 	return ret_obj;
 }
