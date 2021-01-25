@@ -6,7 +6,7 @@ frappe.ui.form.on("Stock Entry", "before_submit", function (frm, cdt, cdn) {
 	// 		frappe.throw("You cannot submit Stock Entry other than Material Transfer. Please change purpose to Material Transfer ");
 	// 		frappe.validated = false;
 	// 	}
-		var is_warehouse_incharge = search_in_roles(frappe.user_roles, "Warehouse Incharge TC")
+		var is_warehouse_incharge = search_in_roles(frappe.user_roles, "Warehouse Incharge TT")
 		$.each(frm.doc.items || [], function (i, d) {
 			if (is_warehouse_incharge && (d.t_warehouse.includes("Delivery Depot"))) {
 				frappe.throw("You cannot submit Stock Entry to Delivery Depot. Please Duplicate this Stock Entry and Select Transfer Type"); frappe.validated = false;
@@ -150,24 +150,21 @@ function CalculateSQM(crow, field, cdt, cdn) {
 function setseries(company) {
 	var ret_obj = { series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-STE-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-STE-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-STE-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-STE-"; break;
+		case "TURK": ret_obj.series = "TT-STE-"; break;
 	}
 	return ret_obj;
 }
 
 function setWarehouses(frm) {
 	if (frm.doc.transfer_type == 'OUTWARD' && frm.doc.docstatus == 0) {
-		if (search_in_roles(frappe.user_roles, "Warehouse Incharge TC")) {
+		if (search_in_roles(frappe.user_roles, "Warehouse Incharge TT")) {
 			frm.set_value('to_warehouse', company_initial(frm.doc.company, "Transit -"));
 			SetUserWarehouse("From");
 		}
-		else if (search_in_roles(frappe.user_roles, "Delivery Officer TC")) { frm.set_value('to_warehouse', ""); SetUserWarehouse("From"); }
+		else if (search_in_roles(frappe.user_roles, "Delivery Officer TT")) { frm.set_value('to_warehouse', ""); SetUserWarehouse("From"); }
 	}
 	if (frm.doc.transfer_type == 'INWARD' && frm.doc.docstatus == 0) {
-		if (search_in_roles(frappe.user_roles, "Warehouse Incharge TC") || search_in_roles(frappe.user_roles, "Delivery Officer TC")) {
+		if (search_in_roles(frappe.user_roles, "Warehouse Incharge TT") || search_in_roles(frappe.user_roles, "Delivery Officer TC")) {
 			frm.set_value('from_warehouse', company_initial(frm.doc.company, "Transit -"));
 			SetUserWarehouse("To");
 		}

@@ -128,13 +128,7 @@ frappe.ui.form.on('Sales Order Item',
 	})
 
 function setseries() {
-	var ret_obj = { twarehouse: "Delivery Depot - TC", series: "TC-SO-" };
-//	switch (company) {
-//		case "TURK": ret_obj.twarehouse = "Delivery Depot - TC"; ret_obj.series = "TC-SO-"; break;
-//		case "T.S ENTERPRISES": ret_obj.twarehouse = "Delivery Depot - TE"; ret_obj.series = "TE-SO-"; break;
-//		case "KALE FAISALABAD": ret_obj.twarehouse = "Delivery Depot - KF"; ret_obj.series = "KF-SO-"; break;
-//		case "TILE BAZAR": ret_obj.twarehouse = "Delivery Depot - TB"; ret_obj.series = "TB-SO-"; break;
-//	}
+	var ret_obj = { twarehouse: "Delivery Depot - TT", series: "TT-SO-" };
 	return ret_obj;
 }
 

@@ -43,10 +43,7 @@ frappe.ui.form.on('Stock Reconciliation Item',
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-SR-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-SR-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-SR-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-SR-"; break;
+		case "TURK": ret_obj.series = "TT-SR-"; break;
 	}
 	return ret_obj;
 }

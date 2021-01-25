@@ -23,10 +23,7 @@ frappe.ui.form.on('Request for Quotation', {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-PE-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-PE-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-PE-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-PE-"; break;
+		case "TURK": ret_obj.series = "TT-PE-"; break;
 	}
 	return ret_obj;
 }

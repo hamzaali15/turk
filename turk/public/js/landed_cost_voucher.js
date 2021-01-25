@@ -23,10 +23,7 @@ frappe.ui.form.on('Landed Cost Voucher', {
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-LCV-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-LCV-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-LCV-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-LCV-"; break;
+		case "TURK": ret_obj.series = "TT-LCV-"; break;
 	}
 	return ret_obj;
 }

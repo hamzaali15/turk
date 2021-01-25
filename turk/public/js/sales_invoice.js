@@ -195,7 +195,7 @@ frappe.ui.form.on('Sales Invoice Item',
 function setseries(company) {
 	var ret_obj = { twarehouse: "", series: "" };
 	switch (company) {
-		case "TURK": ret_obj.series = "TC-SI-"; break;
+		case "TURK": ret_obj.series = "TT-SI-"; break;
 //		case "T.S ENTERPRISES": ret_obj.series = "TE-SI-"; break;
 //		case "KALE FAISALABAD": ret_obj.series = "KF-SI-"; break;
 //		case "TILE BAZAR": ret_obj.series = "TB-SI-"; break;
