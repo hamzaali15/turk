@@ -64,18 +64,18 @@ def check_to_allow_delivery(so, to_create):
 
 	if to_create == "Sales Invoice":
 		if not so.allow_delivery:
-			if so.advance_paid < so.rounded_total:
-				frappe.throw(_('Not allowed to create the Sales Invoice before Payment'))
-			else:
-				cheque_payments = frappe.db.sql("""
-					select pe.name
-					from `tabPayment Entry Reference` pref
-					inner join `tabPayment Entry` pe on pe.name = pref.parent
-					inner join `tabMode of Payment` mop on mop.name = pe.mode_of_payment
-					where pref.reference_doctype = 'Sales Order' and pref.reference_name = %s and mop.name like '%%cheque%%'
+			# if so.advance_paid < so.rounded_total:
+			# 	frappe.throw(_('Not allowed to create the Sales Invoice before Payment'))
+			# else:
+			cheque_payments = frappe.db.sql("""
+				select pe.name
+				from `tabPayment Entry Reference` pref
+				inner join `tabPayment Entry` pe on pe.name = pref.parent
+				inner join `tabMode of Payment` mop on mop.name = pe.mode_of_payment
+				where pref.reference_doctype = 'Sales Order' and pref.reference_name = %s and mop.name like '%%cheque%%'
 				""", so.name)
-				if cheque_payments:
-					frappe.throw(_("Payment made by cheque. Delivery requires approval."))
+			if cheque_payments:
+				frappe.throw(_("Payment made by cheque. Delivery requires approval."))
 	elif to_create == "Delivery Note":
 		if not so.allow_delivery:
 			if so.advance_paid < so.rounded_total:
