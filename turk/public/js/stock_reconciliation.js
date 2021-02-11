@@ -9,9 +9,9 @@ frappe.ui.form.on("Stock Reconciliation", "before_submit", function (frm, cdt, c
 	}
 })
 
-frappe.ui.form.on("Stock Reconciliation", "onload", function (frm, cdt, cdn) {
-	var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-});
+// frappe.ui.form.on("Stock Reconciliation", "onload", function (frm, cdt, cdn) {
+// 	var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+// });
 
 frappe.ui.form.on("Stock Reconciliation", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.unallocated_amount > 0 && frm.doc.party == "LOADER BIKE") {
@@ -19,15 +19,15 @@ frappe.ui.form.on("Stock Reconciliation", "validate", function (frm, cdt, cdn) {
 		frappe.validated = false;
 		return;
 	}
-	var ret_obj = setseries(frm.doc.company);
-	frm.set_value("naming_series", ret_obj.series);
+	// var ret_obj = setseries(frm.doc.company);
+	// frm.set_value("naming_series", ret_obj.series);
 });
 
-frappe.ui.form.on('Stock Reconciliation', {
-	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-	}
-});
+// frappe.ui.form.on('Stock Reconciliation', {
+// 	company: function (frm) {
+// 		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+// 	}
+// });
 
 frappe.ui.form.on('Stock Reconciliation Item',
 	{
@@ -40,13 +40,13 @@ frappe.ui.form.on('Stock Reconciliation Item',
 		}
 	})
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-SR-"; break;
-	}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-SR-"; break;
+// 	}
+// 	return ret_obj;
+// }
 
 function search_in_roles(roles_array, role_string) {
 	for (var i = 0; i < roles_array.length; ++i) {

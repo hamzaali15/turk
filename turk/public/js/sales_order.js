@@ -91,8 +91,8 @@ frappe.ui.form.on("Sales Order", "validate", function (frm, cdt, cdn) {
 		// 		}
 		// 	}
 		// })
-		var ret_obj = setseries(frm.doc.company);
-		frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company);
+		// frm.set_value("naming_series", ret_obj.series);
 		frm.set_value("customer_name", frm.doc.customer_name.toUpperCase());
 		if (frm.doc.title)
 			frm.set_value("title", frm.doc.title.toUpperCase());
@@ -127,10 +127,10 @@ frappe.ui.form.on('Sales Order Item',
 		}
 	})
 
-function setseries() {
-	var ret_obj = { twarehouse: "Delivery Depot - TT", series: "TT-SO-" };
-	return ret_obj;
-}
+// function setseries() {
+// 	var ret_obj = { twarehouse: "Delivery Depot - TT", series: "SO-" };
+// 	return ret_obj;
+// }
 
 function get_approval_limit(crow) {
 	frappe.call({

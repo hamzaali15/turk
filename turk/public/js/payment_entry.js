@@ -4,8 +4,8 @@
 frappe.ui.form.on("Payment Entry", {
 	onload: function (frm) {
 		if (frm.doc.docstatus == 0) {
-			var ret_obj = setseries(frm.doc.company);
-			frm.set_value("naming_series", ret_obj.series);
+			// var ret_obj = setseries(frm.doc.company);
+			// frm.set_value("naming_series", ret_obj.series);
 			$.each(frm.doc.references || [], function (i, d) {
 				get_sales_order_owner(d.reference_doctype, d.reference_name, d);
 			});
@@ -18,13 +18,13 @@ frappe.ui.form.on("Payment Entry", {
 				frappe.validated = false;
 				return;
 			}
-			var ret_obj = setseries(frm.doc.company);
-			cur_frm.set_value("naming_series", ret_obj.series);
+			// var ret_obj = setseries(frm.doc.company);
+			// cur_frm.set_value("naming_series", ret_obj.series);
 		}
 	},
 	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company);
-		frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company);
+		// frm.set_value("naming_series", ret_obj.series);
 		link_si_to_so(frm);
 	},
 	references_on_form_rendered: function (frm) {
@@ -98,13 +98,13 @@ function link_si_to_so(frm) {
 	}
 }
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-PE-"; break;
-}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-PE-"; break;
+// }
+// 	return ret_obj;
+// }
 
 function get_sales_order_owner(doctype, docnumber, row) {
 	var fieldfetch = "";

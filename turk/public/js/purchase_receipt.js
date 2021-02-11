@@ -2,21 +2,21 @@
 frappe.provide('turk.stock');
 
 
-frappe.ui.form.on('Purchase Receipt', {
-	company: function (frm) { if (frm.doc.docstatus == 0) { var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series); } },
+// frappe.ui.form.on('Purchase Receipt', {
+// 	// company: function (frm) { if (frm.doc.docstatus == 0) { var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series); } },
 
-	charge_to_supplier: function (frm) {
-		if (frm.doc.docstatus == 0) {
-		//	frm.set_value("charge_to_company", (parseFloat(frm.doc.breakage_total_amount) - parseFloat(frm.doc.charge_to_supplier)));
-		}
-	}
-});
+// 	charge_to_supplier: function (frm) {
+// 		if (frm.doc.docstatus == 0) {
+// 		//	frm.set_value("charge_to_company", (parseFloat(frm.doc.breakage_total_amount) - parseFloat(frm.doc.charge_to_supplier)));
+// 		}
+// 	}
+// });
 
 frappe.ui.form.on("Purchase Receipt", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
 		validateBoxes(frm);
-		var ret_obj = setseries(frm.doc.company);
-		frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company);
+		// frm.set_value("naming_series", ret_obj.series);
 		CalculateBreakage(frm);
 		$.each(frm.doc.items || [], function (i, d) {
 			frappe.call({
@@ -63,22 +63,22 @@ frappe.ui.form.on("Purchase Receipt", "onload", function (frm, cdt, cdn) {
 	}
 });
 
-frappe.ui.form.on("Purchase Receipt", "before_submit", function (frm, cdt, cdn) {
-	if (frm.doc.docstatus == 0) {
-		if (frm.doc.supplier != "S-00095") {
-			if (!frm.doc.is_return) {
-			//	frm.set_value("discount_amount", (-1 * parseFloat(frm.doc.charge_to_company)));
-			}
-		}
-		$.each(frm.doc.items || [], function (i, d) {
-			var tempitemname = d.item_name;
-			if (tempitemname.includes("Dummy") == true) {
-				frappe.throw("You cannot submit Purchase Receipt if it contains dummy Item");
-				frappe.validated = false;
-			}
-		})
-	}
-})
+// frappe.ui.form.on("Purchase Receipt", "before_submit", function (frm, cdt, cdn) {
+// 	if (frm.doc.docstatus == 0) {
+// 		if (frm.doc.supplier != "S-00095") {
+// 			if (!frm.doc.is_return) {
+// 			//	frm.set_value("discount_amount", (-1 * parseFloat(frm.doc.charge_to_company)));
+// 			}
+// 		}
+// 		$.each(frm.doc.items || [], function (i, d) {
+// 			var tempitemname = d.item_name;
+// 			if (tempitemname.includes("Dummy") == true) {
+// 				frappe.throw("You cannot submit Purchase Receipt if it contains dummy Item");
+// 				frappe.validated = false;
+// 			}
+// 		})
+// 	}
+// })
 
 frappe.ui.form.on('Purchase Receipt Item',
 	{
@@ -152,14 +152,14 @@ function CalculateSQM(crow, field, cdt, cdn) {
 		cur_frm.refresh_field("items");
 	}
 }
-function setseries(company) {
-	var ret_obj = { series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-PR-"; break;
-	}
+// function setseries(company) {
+// 	var ret_obj = { series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-PR-"; break;
+// 	}
 
-	return ret_obj;
-}
+// 	return ret_obj;
+// }
 
 function CalculateBreakage(frm) {
 	var total_breakage = 0;

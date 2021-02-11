@@ -9,19 +9,19 @@ frappe.ui.form.on("Purchase Order", {
 				d.schedule_date = frm.doc.schedule_date;
 			})
 		}
-	},
-	company: function (frm) {
-		if(cur_frm.doc.__islocal!=undefined){
-			var ret_obj = setseries(frm.doc.company);
-			frm.set_value("naming_series", ret_obj.series);
-		}
-	}
+	}//,
+	// company: function (frm) {
+	// 	if(cur_frm.doc.__islocal!=undefined){
+	// 		var ret_obj = setseries(frm.doc.company);
+	// 		frm.set_value("naming_series", ret_obj.series);
+	// 	}
+	// }
 });
 frappe.ui.form.on("Purchase Order", "onload", function (frm, cdt, cdn) {
-	if(cur_frm.doc.__islocal!=undefined){
-	var ret_obj = setseries(frm.doc.company);	
-	frm.set_value("naming_series", ret_obj.series);
-	}
+	// if(cur_frm.doc.__islocal!=undefined){
+	// var ret_obj = setseries(frm.doc.company);	
+	// frm.set_value("naming_series", ret_obj.series);
+	// }
 	$.each(frm.doc.items || [], function (i, d) {
 		if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
 	})
@@ -29,10 +29,10 @@ frappe.ui.form.on("Purchase Order", "onload", function (frm, cdt, cdn) {
 });
 
 frappe.ui.form.on("Purchase Order", "validate", function (frm, cdt, cdn) {
-	if(cur_frm.doc.__islocal!=undefined){
-	var ret_obj = setseries(frm.doc.company);
-	frm.set_value("naming_series", ret_obj.series);
-	}
+	// if(cur_frm.doc.__islocal!=undefined){
+	// var ret_obj = setseries(frm.doc.company);
+	// frm.set_value("naming_series", ret_obj.series);
+	// }
 	validateBoxes(frm);	
 	$.each(frm.doc.items || [], function (i, d) {
 	//	d.warehouse = ret_obj.twarehouse;
@@ -85,13 +85,13 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	}
 }
 
-function setseries(company) {
-	var ret_obj = {  series: "" };	
-	switch (company) {
-		case "Turk Tiles":  ret_obj.series = "TT-PO-"; break;
-	}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = {  series: "" };	
+// 	switch (company) {
+// 		case "Turk Tiles":  ret_obj.series = "TT-PO-"; break;
+// 	}
+// 	return ret_obj;
+// }
 
 turk.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.extend({
 	refresh: function (doc, cdt, cdn) {

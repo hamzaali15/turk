@@ -56,7 +56,7 @@ frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 			})
 		}
 		var sales_order_no = "0";
-		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
 	//	if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot - TC"); }
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.item_group != 'Fixed Assets') {
@@ -134,9 +134,9 @@ frappe.ui.form.on("Sales Invoice", "refresh", function (frm, cdt, cdn) {
 });
 
 frappe.ui.form.on('Sales Invoice', {
-	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-	},
+	// company: function (frm) {
+	// 	var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+	// },
 	before_save: function (frm) {
 		if (frm.doc.docstatus == 0) {
 			update_item_qty_based_on_sales_order(frm);
@@ -192,17 +192,17 @@ frappe.ui.form.on('Sales Invoice Item',
 
 
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-SI-"; break;
-//		case "T.S ENTERPRISES": ret_obj.series = "TE-SI-"; break;
-//		case "KALE FAISALABAD": ret_obj.series = "KF-SI-"; break;
-//		case "TILE BAZAR": ret_obj.series = "TB-SI-"; break;
-	}
-	if (cur_frm.doc.is_return) { ret_obj.series = ret_obj.series + "RT-" }
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-SI-"; break;
+// //		case "T.S ENTERPRISES": ret_obj.series = "TE-SI-"; break;
+// //		case "KALE FAISALABAD": ret_obj.series = "KF-SI-"; break;
+// //		case "TILE BAZAR": ret_obj.series = "TB-SI-"; break;
+// 	}
+// 	if (cur_frm.doc.is_return) { ret_obj.series = ret_obj.series + "RT-" }
+// 	return ret_obj;
+// }
 
 function search_in_roles(roles_array, role_string) {
 	for (i = 0; i < roles_array.length; ++i) {
