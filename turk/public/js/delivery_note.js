@@ -2,7 +2,7 @@
 
 frappe.ui.form.on("Delivery Note", "before_submit", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
-		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
+	//	var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
 		var isdelivery_officer = search_in_roles(frappe.user_roles, "Delivery Officer");
 		$.each(frm.doc.items || [], function (i, d) {
 			if (isdelivery_officer && (d.warehouse.includes('Delivery Depot') == false)) {
@@ -46,7 +46,7 @@ frappe.ui.form.on("Delivery Note", "onload", function (frm, cdt, cdn) {
 
 frappe.ui.form.on("Delivery Note", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
-		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
 		var tcost_center = "Test";
 	//	if (!frm.doc.custom_delivery_warehouse) { frm.set_value("custom_delivery_warehouse", "Delivery Depot"); }
 		$.each(frm.doc.items || [], function (i, d) {
@@ -81,11 +81,11 @@ function search_in_roles(roles_array, role_string) {
 	return false;
 }
 
-frappe.ui.form.on('Delivery Note', {
-	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-	}
-});
+// frappe.ui.form.on('Delivery Note', {
+// 	company: function (frm) {
+// 		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+// 	}
+// });
 
 frappe.ui.form.on('Delivery Note Item',
 	{
@@ -125,10 +125,10 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	}
 }
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-DN-"; break;
-	}
-	return ret_obj;
-}
+// // function setseries(company) {
+// // 	var ret_obj = { twarehouse: "", series: "" };
+// // 	switch (company) {
+// // 		case "Turk Tiles": ret_obj.series = "TT-DN-"; break;
+// // 	}
+// // 	return ret_obj;
+// }

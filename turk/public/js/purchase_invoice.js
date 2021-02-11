@@ -11,16 +11,16 @@ frappe.ui.form.on("Purchase Invoice", "onload", function (frm, cdt, cdn) {
 frappe.ui.form.on("Purchase Invoice", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
 		validateBoxes(frm);
-		var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company); cur_frm.set_value("naming_series", ret_obj.series);
 		calculate_total_boxes(frm);
 	}
 });
 
-frappe.ui.form.on('Purchase Invoice', {
-	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-	}
-});
+// frappe.ui.form.on('Purchase Invoice', {
+// 	company: function (frm) {
+// 		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+// 	}
+// });
 
 frappe.ui.form.on('Purchase Invoice Item',
 	{
@@ -68,12 +68,12 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	}
 }
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-PI-"; break;
-	}
-	// if (cur_frm.doc.supplier == "S-00095") { ret_obj.series = ret_obj.series + "ORT-" }
-	if (cur_frm.doc.is_return) { ret_obj.series = ret_obj.series + "RT-" }
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-PI-"; break;
+// 	}
+// 	// if (cur_frm.doc.supplier == "S-00095") { ret_obj.series = ret_obj.series + "ORT-" }
+// 	if (cur_frm.doc.is_return) { ret_obj.series = ret_obj.series + "RT-" }
+// 	return ret_obj;
+// }

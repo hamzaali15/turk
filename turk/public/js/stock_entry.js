@@ -19,10 +19,10 @@ frappe.ui.form.on('Stock Entry', {
 	company: function (frm) {
 		setup_warehouse_query('s_warehouse', frm);
 		setup_warehouse_query('t_warehouse', frm);
-		if (frm.doc.docstatus == 0) {
-			var ret_obj = setseries(frm.doc.company);
-			frm.set_value("naming_series", ret_obj.series);
-		}
+		// if (frm.doc.docstatus == 0) {
+		// 	var ret_obj = setseries(frm.doc.company);
+		// 	frm.set_value("naming_series", ret_obj.series);
+		// }
 	},
 	transfer_type: function (frm) {
 		setWarehouses(frm);
@@ -67,8 +67,8 @@ function company_initial(company, res) {
 }
 
 frappe.ui.form.on("Stock Entry", "onload", function (frm, cdt, cdn) {
-	var ret_obj = setseries(frm.doc.company);
-	frm.set_value("naming_series", ret_obj.series);
+	// var ret_obj = setseries(frm.doc.company);
+	// frm.set_value("naming_series", ret_obj.series);
 	if (frm.doc.docstatus == 0) {
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
@@ -78,8 +78,8 @@ frappe.ui.form.on("Stock Entry", "onload", function (frm, cdt, cdn) {
 
 frappe.ui.form.on("Stock Entry", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
-		var ret_obj = setseries(frm.doc.company);
-		frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company);
+		// frm.set_value("naming_series", ret_obj.series);
 		$.each(frm.doc.items || [], function (i, d) {
 			if (frm.doc.from_warehouse != d.s_warehouse && i == 0) {
 				frm.set_value('from_warehouse', d.s_warehouse);
@@ -147,13 +147,13 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	}
 }
 
-function setseries(company) {
-	var ret_obj = { series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-STE-"; break;
-	}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-STE-"; break;
+// 	}
+// 	return ret_obj;
+// }
 
 function setWarehouses(frm) {
 	if (frm.doc.transfer_type == 'OUTWARD' && frm.doc.docstatus == 0) {

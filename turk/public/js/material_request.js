@@ -5,7 +5,7 @@ frappe.ui.form.on("Material Request", "onload", function (frm, cdt, cdn) {
 	setup_warehouse_query('custom_warehouse_name', frm);
 
 	if (frm.doc.docstatus == 0) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
 		frm.set_value("material_request_type", "Material Transfer");
 		$.each(frm.doc.items || [], function (i, d) {
 			if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
@@ -15,17 +15,17 @@ frappe.ui.form.on("Material Request", "onload", function (frm, cdt, cdn) {
 
 frappe.ui.form.on("Material Request", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+		// var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
 		validateBoxes(frm);
 	}
 
 });
 
-frappe.ui.form.on('Material Request', {
-	company: function (frm) {
-		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
-	}
-});
+// frappe.ui.form.on('Material Request', {
+// 	company: function (frm) {
+// 		var ret_obj = setseries(frm.doc.company); frm.set_value("naming_series", ret_obj.series);
+// 	}
+// });
 
 frappe.ui.form.on('Material Request Item',
 	{
@@ -81,13 +81,13 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	calculate_total_boxes(cur_frm);
 }
 
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "Turk Tiles": ret_obj.series = "TT-MR-"; break;
-	}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "Turk Tiles": ret_obj.series = "TT-MR-"; break;
+// 	}
+// 	return ret_obj;
+// }
 
 function calculateTotals(frm) {
 	var amount = 0, total_weight = 0;

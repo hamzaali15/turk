@@ -1,8 +1,8 @@
 {% include "turk/public/js/utils.js" %}
 
 frappe.ui.form.on("Quotation", "onload", function (frm, cdt, cdn) {
-	var ret_obj = setseries(frm.doc.company);
-	frm.set_value("naming_series", ret_obj.series);
+	// var ret_obj = setseries(frm.doc.company);
+	// frm.set_value("naming_series", ret_obj.series);
 	$.each(frm.doc.items || [], function (i, d) {
 		if (d.qty != d.sqm && d.item_code != 'undefined') { CalculateSQM(d, "qty", cdt, cdn); }
 	})
@@ -13,8 +13,8 @@ frappe.ui.form.on("Quotation", "onload", function (frm, cdt, cdn) {
 
 frappe.ui.form.on("Quotation", "validate", function (frm, cdt, cdn) {
 	validateBoxes(frm);
-	var ret_obj = setseries(frm.doc.company);
-	frm.set_value("naming_series", ret_obj.series);
+	// var ret_obj = setseries(frm.doc.company);
+	// frm.set_value("naming_series", ret_obj.series);
 	$.each(frm.doc.items || [], function (i, d) {
 		d.warehouse = ret_obj.twarehouse
 	})
@@ -79,10 +79,10 @@ function CalculateSQM(crow, field, cdt, cdn) {
 		cur_frm.refresh_field("items");
 	}
 }
-function setseries(company) {
-	var ret_obj = { twarehouse: "", series: "" };
-	switch (company) {
-		case "TURK": ret_obj.series = "TT-QTN-"; break;
-	}
-	return ret_obj;
-}
+// function setseries(company) {
+// 	var ret_obj = { twarehouse: "", series: "" };
+// 	switch (company) {
+// 		case "TURK": ret_obj.series = "TT-QTN-"; break;
+// 	}
+// 	return ret_obj;
+// }
