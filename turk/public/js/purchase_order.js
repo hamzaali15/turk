@@ -121,7 +121,10 @@ turk.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.ext
 					}
 				}
 			}
+		}
 
+		if (cint(doc.docstatus==0) && cur_frm.page.current_view_name!=="pos" && !doc.is_return) {
+			this.frm.cscript.sales_order_btn();
 		}
 	},
 	ts_make_purchase_receipt: function () {
@@ -129,7 +132,48 @@ turk.buying.PurchaseOrderController = erpnext.buying.PurchaseOrderController.ext
 			method: "turk.utils.ts_make_purchase_receipt",
 			frm: cur_frm
 		})
-	}
-});
+	},
+	sales_order_btn: function() {
+		var me = this;
+		this.$sales_order_btn = this.frm.add_custom_button(__('Sales Order'),
+			function() {
+				erpnext.utils.map_current_doc({
+					method: "turk.utils.ts_make_purchase_order",
+					source_doctype: "Sales Order",
+					target: me.frm,
+					setters: {
+						customer: me.frm.doc.customer || undefined,
+						po_number: me.frm.doc.po_number
+					},
+					get_query_filters: {
+						docstatus: 1,
+						status: ["not in", ["Closed", "On Hold"]],
+						per_billed: ["<", 99.99],
+						company: me.frm.doc.company
+					}
+				})
+			}, __("Get items from"));
+		}
+	// add_from_mappers: function() {
+	// 	var me = this;
+	// 	this.frm.add_custom_button(__('Sales Order'),
+	// 		function() {
+	// 			erpnext.utils.map_current_doc({
+	// 				method: "erpnext.selling.doctype.sales_order.sales_order.make_sales_invoice",
+	// 				source_doctype: "Sales Order",
+	// 				target: me.frm,
+	// 				setters: {
+	// 					customer: me.frm.doc.customer || undefined,
+	// 				},
+	// 				get_query_filters: {
+	// 					docstatus: 1,
+	// 					status: ["not in", ["Closed", "On Hold"]],
+	// 					per_billed: ["<", 99.99],
+	// 					company: me.frm.doc.company
+	// 				}
+	// 			})
+	// 		}, __("Get items from"));
+	// 	}
+	});
 
 $.extend(cur_frm.cscript, new turk.buying.PurchaseOrderController({ frm: cur_frm }));
