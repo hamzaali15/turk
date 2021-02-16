@@ -380,7 +380,8 @@ def ts_make_purchase_order(source_name, target_doc=None):
 			"doctype": "Purchase Order",
 			"field_map": {
 				"per_billed": "per_billed",
-				"supplier_warehouse":"supplier_warehouse"
+				"supplier_warehouse":"supplier_warehouse",
+				"inter_company_order_reference": ""
 			},
 			"validation": {
 				"docstatus": ["=", 1],
