@@ -404,7 +404,7 @@ def ts_make_purchase_order(source_name, target_doc=None):
 			"add_if_empty": True
 		}
 	}, target_doc, set_missing_values)
-
+	doc.inter_company_order_reference = None	
 	return doc
 
 
