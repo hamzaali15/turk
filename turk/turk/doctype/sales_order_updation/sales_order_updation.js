@@ -21,10 +21,10 @@ frappe.ui.form.on('Sales Order Updation', {
 	},
 	update_items_btn: function (frm) {
 		if (validateQty(frm) != false) {
-			if (Math.abs(frm.doc.difference) > 5.00) {
-				frappe.throw(__("The new total of the items should not exceed the difference of amount 5."));
-				return false;
-			}
+			// if (Math.abs(frm.doc.difference) > 5.00) {
+			// 	frappe.throw(__("The new total of the items should not exceed the difference of amount 5."));
+			// 	return false;
+			// }
 
 			frappe.call({
 				method: 'turk.utils.get_sales_order_items',
@@ -34,10 +34,10 @@ frappe.ui.form.on('Sales Order Updation', {
 				},
 				callback: function (r) {
 					if (r.message) {
-						if (r.message.length == frm.doc.items.length) {
-							frappe.throw(__("Please add a new item row to update the Sales Order!"));
-							return false;
-						}
+						// if (r.message.length == frm.doc.items.length) {
+						// 	frappe.throw(__("Please add a new item row to update the Sales Order!"));
+						// 	return false;
+						// }
 						frappe.call({
 							method: 'erpnext.controllers.accounts_controller.update_child_qty_rate',
 							freeze: true,
@@ -104,7 +104,7 @@ function calculateNewTotal(frm) {
 		newTotal += item.qty * item.rate;
 	});
 	frm.set_value("new_total", newTotal.toFixed(2));
-	frm.set_value("difference", String((frm.doc.total - (newTotal).toFixed(2)).toFixed(2)));
+	// frm.set_value("difference", String((frm.doc.total - (newTotal).toFixed(2)).toFixed(2)));
 }
 
 function loadItems(frm) {
@@ -227,13 +227,13 @@ function validateItems(frm, so, validated) {
 			return validated;
 		}
 	});
-	var updationItems = frm.doc.items;
-	updationItems.forEach((updationItem) => {
-		if (updationItem.qty < updationItem.delivered_qty) {
-			validated = false;
-			frappe.throw(__("The qty for item " + updationItem.item_code + " can not be less than delivered qty"));
-			return validated;
-		}
-	});
+	// var updationItems = frm.doc.items;
+	// updationItems.forEach((updationItem) => {
+	// 	if (updationItem.qty < updationItem.delivered_qty) {
+	// 		validated = false;
+	// 		frappe.throw(__("The qty for item " + updationItem.item_code + " can not be less than delivered qty"));
+	// 		return validated;
+	// 	}
+	// });
 	return validated;
 }

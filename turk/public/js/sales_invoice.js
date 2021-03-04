@@ -176,7 +176,7 @@ frappe.ui.form.on('Sales Invoice Item',
 		items_add: function (frm, cdt, cdn) {
 			var sales_order_no = "";
 			$.each(frm.doc.items || [], function (i, d) {
-				if (d.sales_order) { sales_order_no = d.sales_order; }
+				// if (d.sales_order) { sales_order_no = d.sales_order; }
 			});
 
 			if (sales_order_no) {
