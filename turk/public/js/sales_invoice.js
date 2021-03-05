@@ -64,12 +64,12 @@ frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 					frappe.throw("0 Qty or Rate is not allowed. Please check item " + d.item_code);
 					frappe.validated = false; return;
 				}
-				if (frm.doc.update_stock) {
-					if (d.qty > d.actual_qty) {
-						frappe.throw("Stock Is not availabe in selected warehouse for item code " + d.item_code);
-						frappe.validated = false; return;
-					}
-				}
+				// if (frm.doc.update_stock) {
+				// 	if (d.qty > d.actual_qty) {
+				// 		frappe.throw("Stock Is not availabe in selected warehouse for item code " + d.item_code);
+				// 		frappe.validated = false; return;
+				// 	}
+				// }
 			}
 			// if (typeof d.sales_order !== "undefined") { sales_order_no = d.sales_order; }
 		//	if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot - TC") { d.warehouse = frm.doc.custom_delivery_warehouse; }
