@@ -1,0 +1,44 @@
+<h2 class="text-center">{%= __("Supplier Ledger") %}</h2>
+<h4 class="text-center">
+	{% if (filters.company) { %}
+		{%= filters.compnay %}
+	{% } %}
+</h4>
+<h5 class="text-center">
+    {%= filters.cost_center %}	<br>
+	{%= dateutil.str_to_user(filters.from_date) %}
+	{%= __("  TO ") %}
+	{%= dateutil.str_to_user(filters.to_date) %}
+	<br>
+		{%= filters.supplier_name %} {%= filters.supplier %}
+</h5>
+<hr>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>{%= __("Date") %}</th>
+			<th>{%= __("Voucher Type") %}</th>
+			<th>{%= __("Voucher") %}</th>
+			<th>{%= __("Against Voucher") %}</th>
+			<th>{%= __("Purchase Order") %}</th>
+			<th>{%= __("Debit") %}</th>
+			<th>{%= __("Credit") %}</th>
+			<th>{%= __("Balance") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{%  for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				<td >{%= data[i].posting_date %}</td>
+				<td >{%= data[i].voucher_type %}</td>
+				<td >{%= data[i].voucher_no %}</td>
+				<td >{%= data[i].against_voucher %}</td>
+				<td >{%= data[i].po %}</td>
+				<td >{%= format_currency(data[i].debit) %}</td>
+				<td >{%= format_currency(data[i].credit) %}</td>
+				<td >{%= format_currency(data[i].balance) %}</td>
+			</tr>
+		{%  } %}
+	</tbody>
+</table>
+<p class="text-right text-muted">Printed On {%= dateutil.str_to_user(dateutil.get_datetime_as_string()) %}</p>
