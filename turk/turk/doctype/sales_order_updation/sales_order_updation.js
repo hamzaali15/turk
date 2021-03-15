@@ -221,19 +221,19 @@ function validateItems(frm, so, validated) {
 				itemExists = 1;
 			}
 		});
-		if (itemExists == undefined) {
+		// if (itemExists == undefined) {
+		// 	validated = false;
+		// 	frappe.throw(__("The item or rate in row " + [i + 1] + " should not be replaced!"));
+		// 	return validated;
+		// }
+	});
+	var updationItems = frm.doc.items;
+	updationItems.forEach((updationItem) => {
+		if (updationItem.qty < updationItem.delivered_qty) {
 			validated = false;
-			frappe.throw(__("The item or rate in row " + [i + 1] + " should not be replaced!"));
+			frappe.throw(__("The qty for item " + updationItem.item_code + " can not be less than delivered qty"));
 			return validated;
 		}
 	});
-	// var updationItems = frm.doc.items;
-	// updationItems.forEach((updationItem) => {
-	// 	if (updationItem.qty < updationItem.delivered_qty) {
-	// 		validated = false;
-	// 		frappe.throw(__("The qty for item " + updationItem.item_code + " can not be less than delivered qty"));
-	// 		return validated;
-	// 	}
-	// });
 	return validated;
 }
