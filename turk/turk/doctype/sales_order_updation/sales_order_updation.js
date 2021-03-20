@@ -34,10 +34,10 @@ frappe.ui.form.on('Sales Order Updation', {
 				},
 				callback: function (r) {
 					if (r.message) {
-						// if (r.message.length == frm.doc.items.length) {
-						// 	frappe.throw(__("Please add a new item row to update the Sales Order!"));
-						// 	return false;
-						// }
+						if (r.message.length == frm.doc.items.length) {
+							frappe.throw(__("Please add a new item row to update the Sales Order!"));
+							return false;
+						}
 						frappe.call({
 							method: 'erpnext.controllers.accounts_controller.update_child_qty_rate',
 							freeze: true,
@@ -221,11 +221,11 @@ function validateItems(frm, so, validated) {
 				itemExists = 1;
 			}
 		});
-		// if (itemExists == undefined) {
-		// 	validated = false;
-		// 	frappe.throw(__("The item or rate in row " + [i + 1] + " should not be replaced!"));
-		// 	return validated;
-		// }
+		if (itemExists == undefined) {
+			validated = false;
+			frappe.throw(__("The item or rate in row " + [i + 1] + " should not be replaced!"));
+			return validated;
+		}
 	});
 	var updationItems = frm.doc.items;
 	updationItems.forEach((updationItem) => {
