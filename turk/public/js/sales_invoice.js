@@ -235,7 +235,7 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 					},
 					get_query_filters: {
 						docstatus: 1,
-						status: ["not in", ["Cancelled", "Unpaid"]],
+						
 						company: me.frm.doc.company
 					}
 				})
