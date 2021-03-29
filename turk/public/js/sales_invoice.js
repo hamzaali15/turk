@@ -190,60 +190,60 @@ frappe.ui.form.on('Sales Invoice Item',
 		}
 	})
 
-// erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.extend({
-// 	refresh: function(doc, dt, dn) {
-// 		const me = this;
-// 		if (cint(doc.docstatus==0) && cur_frm.page.current_view_name!=="pos" && !doc.is_return) {
-// 			this.frm.cscript.sales_order_btn();
-// 			this.frm.cscript.purchase_invoice_btn();
-// 		}
-// 	},
+erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.extend({
+	refresh: function(doc, dt, dn) {
+		const me = this;
+		if (cint(doc.docstatus==0) && cur_frm.page.current_view_name!=="pos" && !doc.is_return) {
+			this.frm.cscript.sales_order_btn();
+			this.frm.cscript.purchase_invoice_btn();
+		}
+	},
 
-// 	sales_order_btn: function() {
-// 		var me = this;
-// 		this.$sales_order_btn = this.frm.add_custom_button(__('Sales Order'),
-// 			function() {
-// 				erpnext.utils.map_current_doc({
-// 					method: "erpnext.selling.doctype.sales_order.sales_order.make_sales_invoice",
-// 					source_doctype: "Sales Order",
-// 					target: me.frm,
-// 					setters: {
-// 						customer: me.frm.doc.customer || undefined,
+	sales_order_btn: function() {
+		var me = this;
+		this.$sales_order_btn = this.frm.add_custom_button(__('Sales Order'),
+			function() {
+				erpnext.utils.map_current_doc({
+					method: "erpnext.selling.doctype.sales_order.sales_order.make_sales_invoice",
+					source_doctype: "Sales Order",
+					target: me.frm,
+					setters: {
+						customer: me.frm.doc.customer || undefined,
 						
-// 					},
-// 					get_query_filters: {
-// 						docstatus: 1,
-// 						status: ["not in", ["Closed", "On Hold"]],
-// 						per_billed: ["<", 99.99],
-// 						company: me.frm.doc.company
-// 					}
-// 				})
-// 			}, __("Get items from"));
-// 	},
-// 	purchase_invoice_btn: function() {
-// 		var me = this;
-// 		this.$purchase_invoice_btn = this.frm.add_custom_button(__('Purchase Invoice'),
-// 			function() {
-// 				erpnext.utils.map_current_doc({
-// 					method: "turk.utils.ts_make_sales_invoice",
-// 					source_doctype: "Purchase Invoice",
-// 					target: me.frm,
-// 					date_field: "posting_date",
-// 					setters: {
-// 						company: me.frm.doc.company,
-// 						shipment_no: me.frm.doc.shipment_no
-// 					},
-// 					get_query_filters: {
-// 						docstatus: 1,
-// 						status: ["not in", ["Cancelled", "Unpaid"]],
-// 						company: me.frm.doc.company
-// 					}
-// 				})
-// 			}, __("Get items from"));
-// 	}
-// });
+					},
+					get_query_filters: {
+						docstatus: 1,
+						status: ["not in", ["Closed", "On Hold"]],
+						per_billed: ["<", 99.99],
+						company: me.frm.doc.company
+					}
+				})
+			}, __("Get items from"));
+	},
+	purchase_invoice_btn: function() {
+		var me = this;
+		this.$purchase_invoice_btn = this.frm.add_custom_button(__('Purchase Invoice'),
+			function() {
+				erpnext.utils.map_current_doc({
+					method: "turk.utils.ts_make_sales_invoice",
+					source_doctype: "Purchase Invoice",
+					target: me.frm,
+					date_field: "posting_date",
+					setters: {
+						company: me.frm.doc.company,
+						shipment_no: me.frm.doc.shipment_no
+					},
+					get_query_filters: {
+						docstatus: 1,
+						status: ["not in", ["Cancelled", "Unpaid"]],
+						company: me.frm.doc.company
+					}
+				})
+			}, __("Get items from"));
+	}
+});
 
-// $.extend(cur_frm.cscript, new erpnext.accounts.SalesInvoiceController({frm: cur_frm}));
+$.extend(cur_frm.cscript, new erpnext.accounts.SalesInvoiceController({frm: cur_frm}));
 
 // function setseries(company) {
 // 	var ret_obj = { twarehouse: "", series: "" };

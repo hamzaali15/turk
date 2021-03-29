@@ -497,50 +497,50 @@ def make_stock_entry(source_name, target_doc=None):
 	return doc
 
 
-# @frappe.whitelist()
-# def ts_make_sales_invoice(source_name, target_doc=None):
-# 	def update_item(obj, target, source_parent):
-# 		target.qty = flt(obj.qty) - flt(obj.received_qty)
-# 		target.received_qty = target.qty
-# 		target.stock_qty = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.conversion_factor)
-# 		target.amount = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.rate)
-# 		target.base_amount = (flt(obj.qty) - flt(obj.received_qty)) * \
-# 			flt(obj.rate) * flt(source_parent.conversion_rate)
+@frappe.whitelist()
+def ts_make_sales_invoice(source_name, target_doc=None):
+	def update_item(obj, target, source_parent):
+		target.qty = flt(obj.qty) - flt(obj.received_qty)
+		target.received_qty = target.qty
+		target.stock_qty = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.conversion_factor)
+		target.amount = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.rate)
+		target.base_amount = (flt(obj.qty) - flt(obj.received_qty)) * \
+			flt(obj.rate) * flt(source_parent.conversion_rate)
 
-# 	def set_missing_values(source, target):
-# 		target.ignore_pricing_rule = 1
-# 		target.run_method("set_missing_values")
-# 		target.run_method("calculate_taxes_and_totals")
+	def set_missing_values(source, target):
+		target.ignore_pricing_rule = 1
+		target.run_method("set_missing_values")
+		target.run_method("calculate_taxes_and_totals")
 
-# 	doc = get_mapped_doc("Purchase Invoice", source_name,	{
-# 		"Purchase Invoice": {
-# 			"doctype": "Sales Invoice",
-# 			"field_map": {
-# 				"per_billed": "per_billed",
-# 				"supplier_warehouse":"supplier_warehouse",
-# 			},
-# 			"validation": {
-# 				"docstatus": ["=", 1],
-# 			}
-# 		},
-# 		"Purchase Invoice Item": {
-# 			"doctype": "Sales Invoice Item",
-# 			"field_map": {
-# 				"name": "purchase_invoice_item",
-# 				"parent": "purchase_invoice",
-# 				"bom": "bom",
-# 				"material_request": "material_request",
-# 				"material_request_item": "material_request_item"
-# 			},
-# 			"postprocess": update_item,
-# 			"condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
-# 		},
-# 		"Purchase Taxes and Charges": {
-# 			"doctype": "Purchase Taxes and Charges",
-# 			"add_if_empty": True
-# 		}
-# 	}, target_doc, set_missing_values)
-# 	return doc
+	doc = get_mapped_doc("Purchase Invoice", source_name,	{
+		"Purchase Invoice": {
+			"doctype": "Sales Invoice",
+			"field_map": {
+				"per_billed": "per_billed",
+				"supplier_warehouse":"supplier_warehouse",
+			},
+			"validation": {
+				"docstatus": ["=", 1],
+			}
+		},
+		"Purchase Invoice Item": {
+			"doctype": "Sales Invoice Item",
+			"field_map": {
+				"name": "purchase_invoice_item",
+				"parent": "purchase_invoice",
+				"bom": "bom",
+				"material_request": "material_request",
+				"material_request_item": "material_request_item"
+			},
+			"postprocess": update_item,
+			"condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
+		},
+		"Purchase Taxes and Charges": {
+			"doctype": "Purchase Taxes and Charges",
+			"add_if_empty": True
+		}
+	}, target_doc, set_missing_values)
+	return doc
 
 
 def send_followup_sms(opportunity, method):
