@@ -235,7 +235,6 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 					},
 					get_query_filters: {
 						docstatus: 1,
-						
 						company: me.frm.doc.company
 					}
 				})

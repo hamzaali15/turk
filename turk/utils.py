@@ -533,10 +533,10 @@ def ts_make_sales_invoice(source_name, target_doc=None):
 				"material_request_item": "material_request_item"
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
+			# "condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
 		},
 		"Purchase Taxes and Charges": {
-			"doctype": "Purchase Taxes and Charges",
+			"doctype": "Sales Taxes and Charges",
 			"add_if_empty": True
 		}
 	}, target_doc, set_missing_values)
