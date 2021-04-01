@@ -500,12 +500,15 @@ def make_stock_entry(source_name, target_doc=None):
 @frappe.whitelist()
 def ts_make_sales_invoice(source_name, target_doc=None):
 	def update_item(obj, target, source_parent):
-		target.qty = flt(obj.qty) - flt(obj.received_qty)
+		target.qty = flt(obj.qty)
 		target.received_qty = target.qty
-		target.stock_qty = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.conversion_factor)
-		target.amount = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.rate)
-		target.base_amount = (flt(obj.qty) - flt(obj.received_qty)) * \
-			flt(obj.rate) * flt(source_parent.conversion_rate)
+		target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
+		target.amount = flt(obj.qty) * flt(obj.rate)
+		target.base_amount = flt(obj.qty) * flt(obj.rate) * flt(source_parent.conversion_rate)
+
+		expense_account = frappe.db.get_values("Company", source_parent.company, ["default_expense_account"])[0]
+		item_expense_account = frappe.db.get_value("Item Default", {'parent': target.item_code, 'company': source_parent.company}, ["expense_account"])
+		target.expense_account = item_expense_account or expense_account
 
 	def set_missing_values(source, target):
 		target.ignore_pricing_rule = 1
