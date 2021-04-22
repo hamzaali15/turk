@@ -30,6 +30,18 @@ class UnbilledCustomerOrdersReport(object):
 				"width": 80
 			},
 			{
+				"label": _("FAX NO"),
+				"fieldtype": "Data",
+				"fieldname": "fax_no",
+				"width": 80
+			},
+			{
+				"label": _("Voucher Type"),
+				"fieldtype": "Data",
+				"fieldname": "voucher_type",
+				"width": 120
+			},
+			{
 				"label": _("Payment Entry"),
 				"fieldtype": "Dynamic Link",
 				"options": "voucher_type",
@@ -72,23 +84,9 @@ class UnbilledCustomerOrdersReport(object):
 		data = []
 		total_debit = total_credit = 0
 
-		opening_balance = frappe._dict({
-			"posting_date": self.filters.from_date,
-			"voucher_no": "Opening Balance",
-			"debit": 0.0,
-			"credit": 0.0,
-			"balance": 0.0
-		})
-		closing_balance = frappe._dict({
-			"posting_date": self.filters.to_date,
-			"voucher_no": "Closing Balance",
-			"debit": 0.0,
-			"credit": 0.0,
-			"balance": 0.0
-		})
 		self.gl_entries = frappe.db.sql("""
 				select
-					posting_date, voucher_no,
+					posting_date, voucher_no, voucher_type,
 					if(sum(debit-credit) > 0, sum(debit-credit), 0) as debit,
 					if(sum(debit-credit) < 0, -sum(debit-credit), 0) as credit
 				from
@@ -98,41 +96,10 @@ class UnbilledCustomerOrdersReport(object):
 					and company = %(company)s
 				group by voucher_no
 				order by posting_date""", self.filters, as_dict=True)
-		for gle in self.gl_entries:
-			opening_balance.debit += gle.debit
-			opening_balance.credit += gle.credit
-
-		sales_inv_gl = frappe.db.sql("""
-			select
-			null as posting_date, null as voucher_no, 
-			(select distinct sii.sales_order from  
-				`tabSales Invoice Item` as sii where sii.sales_order is not null and sii.parent = si.name ) as sales_order,
-			if(sum(gl.debit-gl.credit) > 0, sum(gl.debit-gl.credit), 0) as debit,
-			if(sum(gl.debit-gl.credit) < 0, -sum(gl.debit-gl.credit), 0) as credit,
-			0 as balance
-			from
-			`tabGL Entry` as gl
-			inner join `tabSales Invoice` as si on si.name = gl.voucher_no
-			where
-			gl.docstatus < 2 and gl.party_type='Customer' and gl.party = %(customer)s
-			and gl.posting_date >= %(from_date)s
-			and gl.posting_date <= %(to_date)s
-			and gl.company = %(company)s
-			and gl.voucher_type = 'Sales Invoice'
-			group by gl.voucher_type, sales_order
-			order by gl.posting_date""", self.filters, as_dict=True)
-		for res in sales_inv_gl:
-			if res.get('debit'):
-				total_debit += res.get('debit')
-			if res.get('name'):
-				split_name_lst = (res.get('name')).split(",")
-				if split_name_lst:
-					gl = frappe.get_doc("GL Entry", split_name_lst[0])
-					res['posting_date'] = gl.posting_date
 
 		payment_ent_gl = frappe.db.sql("""select
-				null as posting_date, gl.voucher_no, 
-				null as sales_order,
+				gl.posting_date as posting_date, gl.voucher_no, 
+				gl.against_voucher as sales_order, gl.voucher_type,
 				if(sum(gl.debit-gl.credit) > 0, sum(gl.debit-gl.credit), 0) as debit,
 				if(sum(gl.debit-gl.credit) < 0, -sum(gl.debit-gl.credit), 0) as credit,
 				0 as balance
@@ -156,19 +123,8 @@ class UnbilledCustomerOrdersReport(object):
 					gl = frappe.get_doc("GL Entry", split_name_lst[0])
 					res['posting_date'] = gl.posting_date
 
-		closing_balance.debit += total_debit
-		closing_balance.credit += total_credit
-
-		data.append(opening_balance)
-		if not sales_inv_gl and not payment_ent_gl:
-			closing_balance.debit += opening_balance.debit
-			closing_balance.credit += opening_balance.credit
-
-		if sales_inv_gl:
-			data.extend(sales_inv_gl)
 		if payment_ent_gl:
 			data.extend(payment_ent_gl)
-		data.append(closing_balance)
 		unbilled_orders = self.get_unbilled_orders()
 		data.extend(unbilled_orders)
 		self.calculate_running_total(data)
@@ -178,6 +134,7 @@ class UnbilledCustomerOrdersReport(object):
 		unbilled_orders = frappe.db.sql("""
 			select
 				so.transaction_date as posting_date, so.name as sales_order,
+				so.fax_no, "Sales Order" as voucher_type,
 				so.rounded_total as debit,
 				sum(ifnull(si.rounded_total, 0)) as credit
 			from `tabSales Order` so
