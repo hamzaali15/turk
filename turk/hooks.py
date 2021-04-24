@@ -166,9 +166,9 @@ doc_events = {
 	},
 	"Quotation": {
 		#"validate": "turk.utils.validate_date"
-	},
-	"Journal Entry": {
-		"before_save": "turk.hook_events.journal_entry.set_name"
+	# },
+	# "Journal Entry": {
+	# 	"before_save": "turk.hook_events.journal_entry.set_name"
 	}
 }
 

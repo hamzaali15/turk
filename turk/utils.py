@@ -13,22 +13,22 @@ from erpnext.controllers.queries import get_doctype_wise_filters, get_fields
 import json
 from collections import defaultdict
 
-import frappe.utils
-from frappe.utils import cstr, flt, getdate, cint, nowdate, add_days, get_link_to_form, strip_html
-from six import string_types
-from frappe.model.utils import get_fetch_values
-from frappe.model.mapper import get_mapped_doc
-from erpnext.stock.stock_balance import update_bin_qty, get_reserved_qty
-from frappe.desk.notifications import clear_doctype_notifications
-from frappe.contacts.doctype.address.address import get_company_address
-from erpnext.controllers.selling_controller import SellingController
-from frappe.automation.doctype.auto_repeat.auto_repeat import get_next_schedule_date
-from erpnext.selling.doctype.customer.customer import check_credit_limit
-from erpnext.stock.doctype.item.item import get_item_defaults
-from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
-from erpnext.manufacturing.doctype.production_plan.production_plan import get_items_for_material_requests
-from erpnext.accounts.doctype.sales_invoice.sales_invoice import validate_inter_company_party, update_linked_doc,\
-	unlink_inter_company_doc
+# import frappe.utils
+# from frappe.utils import cstr, flt, getdate, cint, nowdate, add_days, get_link_to_form, strip_html
+# from six import string_types
+# from frappe.model.utils import get_fetch_values
+# from frappe.model.mapper import get_mapped_doc
+# from erpnext.stock.stock_balance import update_bin_qty, get_reserved_qty
+# from frappe.desk.notifications import clear_doctype_notifications
+# from frappe.contacts.doctype.address.address import get_company_address
+# from erpnext.controllers.selling_controller import SellingController
+# from frappe.automation.doctype.auto_repeat.auto_repeat import get_next_schedule_date
+# from erpnext.selling.doctype.customer.customer import check_credit_limit
+# from erpnext.stock.doctype.item.item import get_item_defaults
+# from erpnext.setup.doctype.item_group.item_group import get_item_group_defaults
+# from erpnext.manufacturing.doctype.production_plan.production_plan import get_items_for_material_requests
+# from erpnext.accounts.doctype.sales_invoice.sales_invoice import validate_inter_company_party, update_linked_doc,\
+# 	unlink_inter_company_doc
 
 
 @frappe.whitelist()
@@ -500,12 +500,15 @@ def make_stock_entry(source_name, target_doc=None):
 @frappe.whitelist()
 def ts_make_sales_invoice(source_name, target_doc=None):
 	def update_item(obj, target, source_parent):
-		target.qty = flt(obj.qty) - flt(obj.received_qty)
+		target.qty = flt(obj.qty)
 		target.received_qty = target.qty
-		target.stock_qty = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.conversion_factor)
-		target.amount = (flt(obj.qty) - flt(obj.received_qty)) * flt(obj.rate)
-		target.base_amount = (flt(obj.qty) - flt(obj.received_qty)) * \
-			flt(obj.rate) * flt(source_parent.conversion_rate)
+		target.stock_qty = flt(obj.qty) * flt(obj.conversion_factor)
+		target.amount = flt(obj.qty) * flt(obj.rate)
+		target.base_amount = flt(obj.qty) * flt(obj.rate) * flt(source_parent.conversion_rate)
+
+		expense_account = frappe.db.get_values("Company", source_parent.company, ["default_expense_account"])[0]
+		item_expense_account = frappe.db.get_value("Item Default", {'parent': target.item_code, 'company': source_parent.company}, ["expense_account"])
+		target.expense_account = item_expense_account or expense_account
 
 	def set_missing_values(source, target):
 		target.ignore_pricing_rule = 1
@@ -533,10 +536,10 @@ def ts_make_sales_invoice(source_name, target_doc=None):
 				"material_request_item": "material_request_item"
 			},
 			"postprocess": update_item,
-			"condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
+			# "condition": lambda doc: abs(doc.received_qty) < abs(doc.qty)
 		},
 		"Purchase Taxes and Charges": {
-			"doctype": "Purchase Taxes and Charges",
+			"doctype": "Sales Taxes and Charges",
 			"add_if_empty": True
 		}
 	}, target_doc, set_missing_values)

@@ -64,21 +64,21 @@ frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 					frappe.throw("0 Qty or Rate is not allowed. Please check item " + d.item_code);
 					frappe.validated = false; return;
 				}
-				if (frm.doc.update_stock) {
-					if (d.qty > d.actual_qty) {
-						frappe.throw("Stock Is not availabe in selected warehouse for item code " + d.item_code);
-						frappe.validated = false; return;
-					}
-				}
+				// if (frm.doc.update_stock) {
+				// 	if (d.qty > d.actual_qty) {
+				// 		frappe.throw("Stock Is not availabe in selected warehouse for item code " + d.item_code);
+				// 		frappe.validated = false; return;
+				// 	}
+				// }
 			}
-			if (typeof d.sales_order !== "undefined") { sales_order_no = d.sales_order; }
+			// if (typeof d.sales_order !== "undefined") { sales_order_no = d.sales_order; }
 		//	if (frm.doc.direct_delivery_from_warehouse && frm.doc.custom_delivery_warehouse != "Delivery Depot - TC") { d.warehouse = frm.doc.custom_delivery_warehouse; }
 
 		})
 
 		$.each(frm.doc.items || [], function (i, d) {
 
-			if (!d.sales_order) { d.sales_order = sales_order_no; }
+			// if (!d.sales_order) { d.sales_order = sales_order_no; }
 			frappe.call({
 				method: "frappe.client.get",
 				args: {
@@ -174,15 +174,15 @@ frappe.ui.form.on('Sales Invoice Item',
 		qty: function (frm, cdt, cdn) { CalculateSQM(locals[cdt][cdn], "qty", cdt, cdn); },
 		item_name: function (frm, cdt, cdn) { CalculateSQM(locals[cdt][cdn], "qty", cdt, cdn); },
 		items_add: function (frm, cdt, cdn) {
-			var sales_order_no = "";
-			$.each(frm.doc.items || [], function (i, d) {
-				// if (d.sales_order) { sales_order_no = d.sales_order; }
-			});
+			// var sales_order_no = "";
+			// $.each(frm.doc.items || [], function (i, d) {
+			// 	// if (d.sales_order) { sales_order_no = d.sales_order; }
+			// });
 
-			if (sales_order_no) {
-				var item = locals[cdt][cdn];
-				item.sales_order = sales_order_no;
-			}
+			// if (sales_order_no) {
+			// 	var item = locals[cdt][cdn];
+			// 	item.sales_order = sales_order_no;
+			// }
 		},
 		item_code: function (frm, cdt, cdn) {
 			frappe.model.set_value(cdt, cdn, "qty", 1);
@@ -235,7 +235,6 @@ erpnext.accounts.SalesInvoiceController = erpnext.selling.SellingController.exte
 					},
 					get_query_filters: {
 						docstatus: 1,
-						status: ["not in", ["Cancelled", "Unpaid"]],
 						company: me.frm.doc.company
 					}
 				})
