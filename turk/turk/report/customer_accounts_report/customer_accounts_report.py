@@ -86,14 +86,11 @@ def get_data(filters):
 					0 as credit,
 					"Sales Order" as voucher_type
 					from `tabSales Order` as so
-					where so.docstatus = 1 and so.company = '{0}'
+					where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}'
 					and so.transaction_date >= '{1}' and so.transaction_date <= '{2}' and so.customer = '{3}'
 					) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('customer'))
 
-		# query += " group by so.name"
-
 		result = frappe.db.sql(query,as_dict=True)
-		# get Payment entriy list for same filters pe_result
 
 		data = []
 		balance1 = 0
