@@ -79,7 +79,7 @@ def get_data(filters):
 					po.rounded_total as credit,
 					"Purchase Order" as voucher_type
 					from `tabPurchase Order` as po
-					where po.docstatus = 1 and po.company = '{0}'
+					where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
 					and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' and po.supplier = '{3}'
 					) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('supplier'))
 
