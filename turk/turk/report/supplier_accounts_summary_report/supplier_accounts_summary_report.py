@@ -12,16 +12,16 @@ def execute(filters=None):
 def get_columns():
 	columns = [
 		{
-			"label": "Customer",
+			"label": "Supplier",
 			"fieldtype": "Link",
-			"options": "Customer",
-			"fieldname": "customer",
+			"options": "Supplier",
+			"fieldname": "supplier",
 			"width": 150
 		},
 		{
-			"label": "Customer Name",
+			"label": "Supplier Name",
 			"fieldtype": "Data",
-			"fieldname": "customer_name",
+			"fieldname": "supplier_name",
 			"width": 150
 		},
 		{
@@ -48,31 +48,31 @@ def get_columns():
 def get_data(filters):
 	if filters.get('company'):
 		query = """select 
-				so.customer,
-				so.customer_name,
-				sum(so.rounded_total) as debit,
-				sum(pe.paid_amount) as credit,
-				(sum(so.rounded_total) - sum(pe.paid_amount)) as balance
-				from `tabSales Order` as so
-				left join `tabPayment Entry Reference` as per on per.reference_name = so.name
+				po.supplier,
+				po.supplier_name,
+				sum(po.rounded_total) as credit,
+				sum(pe.paid_amount) as debit,
+				(sum(pe.paid_amount) - sum(po.rounded_total)) as balance
+				from `tabPurchase Order` as po
+				left join `tabPayment Entry Reference` as per on per.reference_name = po.name
 				left join `tabPayment Entry` as pe on pe.name = per.parent
-				where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}'
-				and so.transaction_date >= '{1}' and so.transaction_date <= '{2}' group by so.customer
+				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
+				and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' group by po.supplier
 				""".format(filters.get('company'), filters.get('from_date'), filters.get('to_date'))
 
 		result = frappe.db.sql(query,as_dict=True)
-		
+
 		data = []
 		for row in result:
-			# balance = row.debit - row.credit
 			row = {
-				"customer": row.customer,
-				"customer_name": row.customer_name,
+				"supplier": row.supplier,
+				"supplier_name": row.supplier_name,
 				"debit": row.debit,
 				"credit": row.credit,
 				"balance": row.balance
 			}
 			data.append(row)
+			
 		return data
 	else:
 		return []
