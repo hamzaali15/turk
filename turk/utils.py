@@ -574,6 +574,7 @@ def send_followup_sms(opportunity, method):
 				number_list = validate_number(set(number_list))
 				send_sms(number_list, cstr(d.sms_message),opportunity.company)
 				d.message_sent = 1
+				d.db_update()
 
 
 @frappe.whitelist()
