@@ -558,20 +558,23 @@ def send_followup_sms(opportunity, method):
 		return validated_number_list
 
 	for d in opportunity.followup:
-		if d.send_message and not d.message_sent and len(d.sms_message)>10:
+		if d.send_message and not d.message_sent and len(d.sms_message) > 10:
+			if not d.sms_message and d.send_message:
+				frappe.throw(_("Please set SMS Message Row no {0}").format(d.idx))
 			number_list = []
-			if d.owner_sms_cell :
+			if d.owner_sms_cell:
 				number_list.append(d.owner_sms_cell)
-			if d.architect_sms_cell :
+			if d.architect_sms_cell:
 				number_list.append(d.architect_sms_cell)
-			if d.contractor_cell_no :
+			if d.contractor_cell_no:
 				number_list.append(d.contractor_cell_no)
 			if number_list:
 				if len(d.sms_message) > 305:
 					frappe.throw(_("Message Length should be less than 2 Messages (305 characters) ."))
-				number_list = validate_number(number_list)
+				number_list = validate_number(set(number_list))
 				send_sms(number_list, cstr(d.sms_message),opportunity.company)
 				d.message_sent = 1
+				d.db_update()
 
 
 @frappe.whitelist()

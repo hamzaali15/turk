@@ -24,6 +24,7 @@
    "parenttype": null,
    "property": "columns",
    "property_type": "Int",
+   "row_name": null,
    "value": "1"
   },
   {
@@ -47,6 +48,7 @@
    "parenttype": null,
    "property": "in_list_view",
    "property_type": "Check",
+   "row_name": null,
    "value": "1"
   },
   {
@@ -70,6 +72,7 @@
    "parenttype": null,
    "property": "in_list_view",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -93,6 +96,7 @@
    "parenttype": null,
    "property": "precision",
    "property_type": "Select",
+   "row_name": null,
    "value": "3"
   }
  ],
