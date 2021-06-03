@@ -51,7 +51,7 @@ def get_columns():
 		},
 		{
 			"fieldname": "boxes",
-			"fieldtype": "Data",
+			"fieldtype": "Float",
 			"label": "Boxes",
 			"width": 150
 		},
@@ -165,9 +165,9 @@ def get_data(filters):
 				"voucher_type": "",
 				"voucher_no": "",
 				"item_code": "",
-				"item_name": "",
+				"item_name": "<b>"+"Grand Total"+"</b>",
 				"qty": "",
-				"boxes": "<b>"+"Grand Total"+"</b>",
+				"boxes": "",
 				"rate": "",
 				"debit": total_debit,
 				"credit": total_credit,
@@ -176,11 +176,13 @@ def get_data(filters):
 			data.append(total_row1)
 
 		balance1 = 0
+		
 		for row in result:
 			i=i-1
+
 			row.balance = row.debit - row.credit
 			balance1 += row.balance
-			
+
 			total_debit += row.debit
 			total_credit += row.credit
 

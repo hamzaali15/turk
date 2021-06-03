@@ -68,7 +68,7 @@ def get_columns():
 		{
 			"fieldname": "qty",
 			"fieldtype": "Float",
-			"label": "Meters",
+			"label": "QTY",
 			"width": 90
 		},
 		{
@@ -105,7 +105,7 @@ def get_data(filters):
 			soi.qty,
 			soi.rate,
 			soi.amount,
-			so.status
+			so.delivery
 			from `tabSales Order` as so
 			left join `tabSales Order Item` as soi on so.name = soi.parent
 			left join `tabItem` as itm on itm.name = soi.item_code
@@ -128,10 +128,14 @@ def get_data(filters):
 		data = []
 
 		total_amount1 = 0
+		total_boxes1 = 0
+		total_qty1 = 0
 		current_value= ""
 		previous_value=""
 		cur_pre_val=""		
 		total_amount2 = 0
+		total_boxes2 = 0
+		total_qty2 = 0
 		i=len(result)
 
 		def subTotal():
@@ -142,8 +146,8 @@ def get_data(filters):
 				"fax_no": "",
 				"customer_name": "",
 				"size": "<b>"+"Sub Total"+"</b>",
-				"boxes": "",
-				"qty": "",
+				"boxes": total_boxes2,
+				"qty": total_qty2,
 				"rate": "",
 				"amount": total_amount2,
 				"status": "" 
@@ -158,8 +162,8 @@ def get_data(filters):
 				"fax_no": "",
 				"customer_name": "",
 				"size": "<b>"+"Grand Total"+"</b>",
-				"boxes": "",
-				"qty": "",
+				"boxes": total_boxes1,
+				"qty": total_qty1,
 				"rate": "",
 				"amount": total_amount1,
 				"status": ""
@@ -177,6 +181,8 @@ def get_data(filters):
 
 			if(current_value == previous_value):
 				total_amount2 += row.amount
+				total_boxes2 += row.boxes
+				total_qty2 += row.qty
 			
 			if(current_value != "" and previous_value != ""):
 				if(current_value != previous_value):
@@ -184,8 +190,12 @@ def get_data(filters):
 					previous_value = ""
 					cur_pre_val=row.po_number
 					total_amount2 = row.amount
+					total_boxes2 = row.boxes
+					total_qty2 = row.qty
 					
 			total_amount1 += row.amount
+			total_boxes1 += row.boxes
+			total_qty1 += row.qty
 			
 			row = {
 				"date": row.date,
@@ -198,7 +208,7 @@ def get_data(filters):
 				"qty": row.qty,
 				"rate": row.rate,
 				"amount": row.amount,
-				"status": row.status
+				"status": row.delivery
 			}
 			data.append(row)
 			if(i==0):
