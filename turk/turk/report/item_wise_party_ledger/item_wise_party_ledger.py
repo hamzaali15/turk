@@ -152,6 +152,8 @@ def get_data(filters):
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
 
+		total_qty = 0
+		total_boxes = 0
 		total_debit = 0
 		total_credit = 0
 		current_value= ""
@@ -166,8 +168,8 @@ def get_data(filters):
 				"voucher_no": "",
 				"item_code": "",
 				"item_name": "<b>"+"Grand Total"+"</b>",
-				"qty": "",
-				"boxes": "",
+				"qty": total_qty,
+				"boxes": total_boxes,
 				"rate": "",
 				"debit": total_debit,
 				"credit": total_credit,
@@ -185,6 +187,9 @@ def get_data(filters):
 
 			total_debit += row.debit
 			total_credit += row.credit
+
+			total_boxes += float(row.boxes)
+			total_qty += float(row.qty)
 
 			row = {
 				"date": row.date,
