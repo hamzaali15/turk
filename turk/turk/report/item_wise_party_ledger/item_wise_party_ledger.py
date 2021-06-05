@@ -99,8 +99,6 @@ def get_data(filters):
 				from `tabSales Order` as so
 				left join `tabSales Order Item` as soi on so.name = soi.parent
 				where so.docstatus = 1 and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
-				
-			union
 			union
 			select 
 				pe.posting_date as date,
