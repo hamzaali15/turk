@@ -51,6 +51,12 @@ def get_columns():
 			"width": 150
 		},
 		{
+			"fieldname": "boxes",
+			"fieldtype": "Float",
+			"label": "Boxes",
+			"width": 150
+		},
+		{
 			"fieldname": "rate",
 			"fieldtype": "Currency",
 			"label": "Rate",
@@ -87,6 +93,7 @@ def get_data(filters):
 				soi.item_code,
 				soi.item_name,
 				soi.qty,
+				soi.boxes,
 				soi.rate,
 				soi.amount as debit,
 				0 as credit
@@ -102,10 +109,26 @@ def get_data(filters):
 				'',
 				'',
 				'',
+				'',
 				0 as debit,
 				pe.paid_amount as credit
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Customer' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
+			union
+			select 
+				je.posting_date as date,
+				je.voucher_type,
+				je.name as voucher_no,
+				'',
+				'',
+				'',
+				'',
+				'',
+				jea.debit,
+				jea.credit
+				from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent
+				where je.docstatus = 1 and jea.party_type = 'Customer' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
 				order by date
 			""".format(filters.get('company'),filters.get('party'),filters.get('from_date'),filters.get('to_date'))
 
@@ -117,6 +140,7 @@ def get_data(filters):
 				poi.item_code,
 				poi.item_name,
 				poi.qty,
+				poi.boxes,
 				poi.rate,
 				0 as debit,
 				poi.amount as credit
@@ -128,6 +152,7 @@ def get_data(filters):
 				pe.posting_date as date,
 				"Payment Entry" as voucher_type,
 				pe.name as voucher_no,
+				'',
 				'',
 				'',
 				'',
@@ -145,6 +170,7 @@ def get_data(filters):
 				'',
 				'',
 				'',
+				'',
 				jea.debit,
 				jea.credit
 				from `tabJournal Entry` as je
@@ -152,13 +178,48 @@ def get_data(filters):
 				where je.docstatus = 1 and jea.party_type = 'Supplier' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
 				order by date
 			""".format(filters.get('company'),filters.get('party'),filters.get('from_date'),filters.get('to_date'))
-		print(query)
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
+
+		total_qty = 0
+		total_boxes = 0
+		total_debit = 0
+		total_credit = 0
+		current_value= ""
+		previous_value=""
+		cur_pre_val=""
+		i=len(result)
+
+		def gTotal():
+			total_row1 = {
+				"date": "",
+				"voucher_type": "",
+				"voucher_no": "",
+				"item_code": "",
+				"item_name": "<b>"+"Grand Total"+"</b>",
+				"qty": total_qty,
+				"boxes": total_boxes,
+				"rate": "",
+				"debit": total_debit,
+				"credit": total_credit,
+				"balance": ""
+			}
+			data.append(total_row1)
+
 		balance1 = 0
+		
 		for row in result:
+			i=i-1
+
 			row.balance = row.debit - row.credit
 			balance1 += row.balance
+
+			total_debit += row.debit
+			total_credit += row.credit
+
+			total_boxes += float(row.boxes)
+			total_qty += float(row.qty)
+
 			row = {
 				"date": row.date,
 				"voucher_type": row.voucher_type,
@@ -166,12 +227,15 @@ def get_data(filters):
 				"item_code": row.item_code,
 				"item_name": row.item_name,
 				"qty": row.qty,
+				"boxes": row.boxes,
 				"rate": row.rate,
 				"debit": row.debit,
 				"credit": row.credit,
 				"balance": balance1
 			}
 			data.append(row)
+			if(i==0):
+				gTotal()
 		return data
 	else:
 		return []
