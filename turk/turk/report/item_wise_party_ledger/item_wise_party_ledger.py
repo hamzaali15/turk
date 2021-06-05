@@ -101,15 +101,16 @@ def get_data(filters):
 				where so.docstatus = 1 and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
 				
 			union
+			union
 			select 
 				pe.posting_date as date,
 				"Payment Entry" as voucher_type,
 				pe.name as voucher_no,
 				'',
 				'',
-				'',
-				'',
-				'',
+				0,
+				0,
+				0,
 				0 as debit,
 				pe.paid_amount as credit
 				from `tabPayment Entry` as pe
@@ -205,6 +206,7 @@ def get_data(filters):
 				"balance": balance1
 			}
 			data.append(row)
+			gTotal()
 			if(i==0):
 				gTotal()
 		return data

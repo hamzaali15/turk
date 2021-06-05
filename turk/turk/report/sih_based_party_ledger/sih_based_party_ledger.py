@@ -107,9 +107,9 @@ def get_data(filters):
 				pe.name as voucher_no,
 				'',
 				'',
-				'',
-				'',
-				'',
+				0,
+				0,
+				0,
 				0 as debit,
 				pe.paid_amount as credit
 				from `tabPayment Entry` as pe
