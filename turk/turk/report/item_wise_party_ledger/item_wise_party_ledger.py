@@ -204,7 +204,6 @@ def get_data(filters):
 				"balance": balance1
 			}
 			data.append(row)
-			gTotal()
 			if(i==0):
 				gTotal()
 		return data
