@@ -99,7 +99,6 @@ def get_data(filters):
 				from `tabSales Order` as so
 				left join `tabSales Order Item` as soi on so.name = soi.parent
 				where so.docstatus = 1 and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
-				
 			union
 			select 
 				pe.posting_date as date,
@@ -107,9 +106,9 @@ def get_data(filters):
 				pe.name as voucher_no,
 				'',
 				'',
-				'',
-				'',
-				'',
+				0,
+				0,
+				0,
 				0 as debit,
 				pe.paid_amount as credit
 				from `tabPayment Entry` as pe
@@ -139,9 +138,9 @@ def get_data(filters):
 				pe.name as voucher_no,
 				'',
 				'',
-				'',
-				'',
-				'',
+				0,
+				0,
+				0,
 				pe.paid_amount as debit,
 				0 as credit
 				from `tabPayment Entry` as pe
@@ -205,6 +204,7 @@ def get_data(filters):
 				"balance": balance1
 			}
 			data.append(row)
+			gTotal()
 			if(i==0):
 				gTotal()
 		return data
