@@ -147,7 +147,7 @@ def get_data(filters):
 				from `tabPurchase Invoice` as po
 				left join `tabPurchase Invoice Item` as poi on po.name = poi.parent
 				where po.docstatus = 1 and po.company = '{0}' and po.supplier = '{1}' and po.posting_date >= '{2}' and po.posting_date <= '{3}' 
-			union
+			union all
 			select 
 				pe.posting_date as date,
 				"Payment Entry" as voucher_type,
@@ -161,7 +161,7 @@ def get_data(filters):
 				0 as credit
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Supplier' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
-			union
+			union all
 			select 
 				je.posting_date as date,
 				je.voucher_type,

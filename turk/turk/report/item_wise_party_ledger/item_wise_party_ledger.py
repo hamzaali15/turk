@@ -131,7 +131,7 @@ def get_data(filters):
 				from `tabPurchase Order` as po
 				left join `tabPurchase Order Item` as poi on po.name = poi.parent
 				where po.docstatus = 1 and po.company = '{0}' and po.supplier = '{1}' and po.transaction_date >= '{2}' and po.transaction_date <= '{3}' 
-			union
+			union all
 			select 
 				pe.posting_date as date,
 				"Payment Entry" as voucher_type,

@@ -54,8 +54,7 @@ def get_data(filters):
 				sum(pe.paid_amount) as credit,
 				(sum(so.rounded_total) - sum(pe.paid_amount)) as balance
 				from `tabSales Order` as so
-				left join `tabPayment Entry Reference` as per on per.reference_name = so.name
-				left join `tabPayment Entry` as pe on pe.name = per.parent
+				left join `tabPayment Entry` as pe on pe.party = so.customer
 				where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}'
 				and so.transaction_date >= '{1}' and so.transaction_date <= '{2}' group by so.customer
 				""".format(filters.get('company'), filters.get('from_date'), filters.get('to_date'))
