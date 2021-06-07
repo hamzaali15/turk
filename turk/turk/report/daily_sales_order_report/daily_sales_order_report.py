@@ -22,6 +22,74 @@ def execute(filters=None):
 def get_columns():
 	columns = [
 		{
+			"fieldname": "date1",
+			"fieldtype": "Date",
+			"label": "Date",
+			"width": 100
+		},
+		{
+			"fieldname": "po_no1",
+			"fieldtype": "Link",
+			"label": "PO #",
+			"options": "Purchase Order",
+			"width": 70
+		},
+		{
+			"fieldname": "purchase_order",
+			"fieldtype": "Link",
+			"label": "Purchase Order #",
+			"options": "Purchase Order",
+			"width": 130
+		},
+		{
+			"fieldname": "fax_no1",
+			"fieldtype": "Data",
+			"label": "Fax #",
+			"width": 100
+		},
+		{
+			"fieldname": "supplier_name",
+			"fieldtype": "Data",
+			"label": "Party Name",
+			"width": 200
+		},
+		{
+			"fieldname": "size1",
+			"fieldtype": "Data",
+			"label": "Size",
+			"width": 90
+		},
+		{
+			"fieldname": "boxes1",
+			"fieldtype": "Float",
+			"label": "Boxes",
+			"width": 90
+		},
+		{
+			"fieldname": "qty1",
+			"fieldtype": "Float",
+			"label": "Meters",
+			"width": 90
+		},
+		{
+			"fieldname": "rate1",
+			"fieldtype": "Currency",
+			"label": "Rate",
+			"width": 90
+		},
+		{
+			"fieldname": "amount1",
+			"fieldtype": "Currency",
+			"label": "Amount",
+			"width": 150
+		},
+		{
+			"fieldname": "emp",
+			"fieldtype": "Data",
+			"label": " ",
+			"width": 100
+		},
+		{
 			"fieldname": "date",
 			"fieldtype": "Date",
 			"label": "Date",
@@ -95,6 +163,16 @@ def get_columns():
 def get_data(filters):
 	if filters.get('company'):
 		query = """select
+			po.transaction_date as date1, 
+			po.po_number as po_number1,
+			po.name as po_name,
+			poi.fax_no as fax_no1,
+			po.supplier_name,
+			itm1.size as size1,
+			poi.boxes as boxes1,
+			poi.qty as qty1,
+			poi.rate as rate1,
+			poi.amount as amount1,
 			so.transaction_date as date, 
 			so.po_number,
 			so.name,
@@ -105,12 +183,16 @@ def get_data(filters):
 			soi.qty,
 			soi.rate,
 			soi.amount,
-			so.delivery
-			from `tabSales Order` as so
+			so.status as delivery
+			from `tabPurchase Order` as po
+			left join `tabPurchase Order Item` as poi on po.name = poi.parent
+			left join `tabItem` as itm1 on itm1.name = poi.item_code
+			left join `tabSales Order` as so on so.po_number = po.po_number and poi.sales_order = so.name
 			left join `tabSales Order Item` as soi on so.name = soi.parent
 			left join `tabItem` as itm on itm.name = soi.item_code
-			where so.company = '{0}' and so.docstatus = 1
-			order by po_number, date""".format(filters.get('company'))
+			where po.company = '{0}' and po.docstatus = 1 and so.docstatus = 1
+			group by poi.fax_no,poi.item_code,soi.fax_no
+			order by po.po_number, so.po_number""".format(filters.get('company'))
 
 		if filters.get('sales_order'):
 			query += " and so.name = '{0}'".format(filters.get('sales_order'))
@@ -130,16 +212,37 @@ def get_data(filters):
 		total_amount1 = 0
 		total_boxes1 = 0
 		total_qty1 = 0
-		current_value= ""
-		previous_value=""
-		cur_pre_val=""		
+		current_value = ""
+		previous_value = ""
+		cur_pre_val = ""		
 		total_amount2 = 0
 		total_boxes2 = 0
 		total_qty2 = 0
+
+		total_amount11 = 0
+		total_boxes11 = 0
+		total_qty11 = 0
+		current_value1 = ""
+		previous_value1 = ""
+		cur_pre_val1 = ""		
+		total_amount22 = 0
+		total_boxes22 = 0
+		total_qty22 = 0
 		i=len(result)
 
 		def subTotal():
 			total_row = {
+				"date1": "",
+				"po_no1": "",
+				"purchase_order": "",
+				"fax_no1": "",
+				"supplier_name": "",
+				"size1": "<b>"+"Sub Total"+"</b>",
+				"boxes1": total_boxes22,
+				"qty1": total_qty22,
+				"rate1": "",
+				"amount1": total_amount22,
+
 				"date": "",
 				"po_no": "",
 				"sales_order": "",
@@ -156,6 +259,17 @@ def get_data(filters):
 
 		def gTotal():
 			total_row1 = {
+				"date1": "",
+				"po_no1": "",
+				"purchase_order": "",
+				"fax_no1": "",
+				"supplier_name": "",
+				"size1": "<b>"+"Grand Total"+"</b>",
+				"boxes1": total_boxes11,
+				"qty1": total_qty11,
+				"rate1": "",
+				"amount1": total_amount11,
+
 				"date": "",
 				"po_no": "",
 				"sales_order": "",
@@ -173,16 +287,26 @@ def get_data(filters):
 		for row in result:
 			i=i-1
 			current_value = row.po_number
+			current_value1 = row.po_number1
 			if(cur_pre_val != ""):
 				if(cur_pre_val != current_value):
 					previous_value = cur_pre_val
+			if(cur_pre_val1 != ""):
+				if(cur_pre_val1 != current_value1):
+					previous_value1 = cur_pre_val1
 			if(previous_value == ""):
 				previous_value = row.po_number
+			if(previous_value1 == ""):
+				previous_value1 = row.po_number1
 
 			if(current_value == previous_value):
 				total_amount2 += row.amount
 				total_boxes2 += row.boxes
 				total_qty2 += row.qty
+			if(current_value1 == previous_value1):
+				total_amount22 += row.amount1
+				total_boxes22 += row.boxes1
+				total_qty22 += row.qty1
 			
 			if(current_value != "" and previous_value != ""):
 				if(current_value != previous_value):
@@ -192,12 +316,31 @@ def get_data(filters):
 					total_amount2 = row.amount
 					total_boxes2 = row.boxes
 					total_qty2 = row.qty
+			if(current_value1 != "" and previous_value1 != ""):
+				if(current_value1 != previous_value1):
+					# subTotal()
+					previous_value1 = ""
+					cur_pre_val1 = row.po_number1
+					total_amount22 = row.amount1
+					total_boxes22 = row.boxes1
+					total_qty22 = row.qty1
 					
-			total_amount1 += row.amount
-			total_boxes1 += row.boxes
-			total_qty1 += row.qty
+			total_amount11 += row.amount1
+			total_boxes11 += row.boxes1
+			total_qty11 += row.qty1
 			
 			row = {
+				"date1": row.date1,
+				"po_no1": row.po_number1,
+				"purchase_order": row.po_name,
+				"fax_no1": row.fax_no1,
+				"supplier_name": row.supplier_name,
+				"size1": row.size1,
+				"boxes1": row.boxes1,
+				"qty1": row.qty1,
+				"rate1": row.rate1,
+				"amount1": row.amount1,
+				"emp": "",
 				"date": row.date,
 				"po_no": row.po_number,
 				"sales_order": row.name,
