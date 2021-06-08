@@ -54,6 +54,12 @@ def get_columns():
 			"width": 200
 		},
 		{
+			"fieldname": "item_name1",
+			"fieldtype": "Data",
+			"label": "Item Name",
+			"width": 200
+		},
+		{
 			"fieldname": "size1",
 			"fieldtype": "Data",
 			"label": "Size",
@@ -122,6 +128,12 @@ def get_columns():
 			"width": 200
 		},
 		{
+			"fieldname": "item_name",
+			"fieldtype": "Data",
+			"label": "Item Name",
+			"width": 200
+		},
+		{
 			"fieldname": "size",
 			"fieldtype": "Data",
 			"label": "Size",
@@ -168,6 +180,7 @@ def get_data(filters):
 			po.name as po_name,
 			poi.fax_no as fax_no1,
 			po.supplier_name,
+			poi.item_name as item_name1,
 			itm1.size as size1,
 			poi.boxes as boxes1,
 			poi.qty as qty1,
@@ -178,6 +191,7 @@ def get_data(filters):
 			so.name,
 			soi.fax_no,
 			so.customer_name,
+			soi.item_name,
 			itm.size,
 			soi.boxes,
 			soi.qty,
@@ -190,24 +204,24 @@ def get_data(filters):
 			left join `tabSales Order` as so on so.po_number = po.po_number and poi.sales_order = so.name
 			left join `tabSales Order Item` as soi on so.name = soi.parent
 			left join `tabItem` as itm on itm.name = soi.item_code
-			where po.company = '{0}' and po.docstatus = 1 and so.docstatus = 1
-			group by poi.fax_no,poi.item_code,soi.fax_no
-			order by po.po_number, so.po_number""".format(filters.get('company'))
+			where po.company = '{0}' and po.docstatus = 1 and so.docstatus = 1 and po.status != 'Closed' and so.status != 'Closed'""".format(filters.get('company'))
 
 		if filters.get('sales_order'):
 			query += " and so.name = '{0}'".format(filters.get('sales_order'))
 
 		if filters.get('po_no'):
-			query += " and so.po_number like '{0}%'".format(filters.get('po_no'))
+			query += " and po.name = '{0}'".format(filters.get('po_no'))
 
 		if filters.get('from_date'):
-			query += " and date >= '{0}'".format(filters.get('from_date'))
+			query += " and po.transaction_date >= '{0}'".format(filters.get('from_date'))
 
 		if filters.get('to_date'):
-			query += " and date <= '{0}'".format(filters.get('to_date'))
+			query += " and po.transaction_date <= '{0}'".format(filters.get('to_date'))
+		query += " group by poi.fax_no,poi.item_code,soi.fax_no order by po.po_number, so.po_number"
 
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
+		print(query)
 
 		total_amount1 = 0
 		total_boxes1 = 0
@@ -237,6 +251,7 @@ def get_data(filters):
 				"purchase_order": "",
 				"fax_no1": "",
 				"supplier_name": "",
+				"item_name1": "",
 				"size1": "<b>"+"Sub Total"+"</b>",
 				"boxes1": total_boxes22,
 				"qty1": total_qty22,
@@ -248,6 +263,7 @@ def get_data(filters):
 				"sales_order": "",
 				"fax_no": "",
 				"customer_name": "",
+				"item_name": "",
 				"size": "<b>"+"Sub Total"+"</b>",
 				"boxes": total_boxes2,
 				"qty": total_qty2,
@@ -264,6 +280,7 @@ def get_data(filters):
 				"purchase_order": "",
 				"fax_no1": "",
 				"supplier_name": "",
+				"item_name1": "",
 				"size1": "<b>"+"Grand Total"+"</b>",
 				"boxes1": total_boxes11,
 				"qty1": total_qty11,
@@ -275,6 +292,7 @@ def get_data(filters):
 				"sales_order": "",
 				"fax_no": "",
 				"customer_name": "",
+				"item_name": "",
 				"size": "<b>"+"Grand Total"+"</b>",
 				"boxes": total_boxes1,
 				"qty": total_qty1,
@@ -325,6 +343,10 @@ def get_data(filters):
 					total_boxes22 = row.boxes1
 					total_qty22 = row.qty1
 					
+			total_amount1 += row.amount
+			total_boxes1 += row.boxes
+			total_qty1 += row.qty
+
 			total_amount11 += row.amount1
 			total_boxes11 += row.boxes1
 			total_qty11 += row.qty1
@@ -335,6 +357,7 @@ def get_data(filters):
 				"purchase_order": row.po_name,
 				"fax_no1": row.fax_no1,
 				"supplier_name": row.supplier_name,
+				"item_name1": row.item_name1,
 				"size1": row.size1,
 				"boxes1": row.boxes1,
 				"qty1": row.qty1,
@@ -346,6 +369,7 @@ def get_data(filters):
 				"sales_order": row.name,
 				"fax_no": row.fax_no,
 				"customer_name": row.customer_name,
+				"item_name": row.item_name,
 				"size": row.size,
 				"boxes": row.boxes,
 				"qty": row.qty,
