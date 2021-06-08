@@ -21,9 +21,10 @@ frappe.query_reports["Daily Sales Order Report"] = {
 		},
 		{
 			"fieldname": "po_no",
-			"fieldtype": "Data",
+			"fieldtype": "Link",
 			"label": "PO #",
-			"mandatory": 0
+			"mandatory": 0,
+			"options": "Purchase Order"
 		},
 		{
 			"fieldname": "from_date",
