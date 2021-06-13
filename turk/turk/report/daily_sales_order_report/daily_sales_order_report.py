@@ -181,7 +181,7 @@ def get_data(filters):
 			poi.fax_no as fax_no1,
 			po.supplier_name,
 			poi.item_name as item_name1,
-			itm1.size as size1,
+			itm.size as size1,
 			poi.boxes as boxes1,
 			poi.qty as qty1,
 			poi.rate as rate1,
@@ -198,13 +198,14 @@ def get_data(filters):
 			soi.rate,
 			soi.amount,
 			so.status as delivery
-			from `tabPurchase Order` as po
-			left join `tabPurchase Order Item` as poi on po.name = poi.parent
-			left join `tabItem` as itm1 on itm1.name = poi.item_code
-			left join `tabSales Order` as so on so.po_number = po.po_number and poi.sales_order = so.name
-			left join `tabSales Order Item` as soi on so.name = soi.parent
+			from 
+			`tabSales Order` as so 	inner join `tabSales Order Item` as soi on so.name = soi.parent
+			left join `tabPurchase Order` as po on so.po_number = po.po_number 
+			inner join `tabPurchase Order Item` as poi on po.name = poi.parent and soi.item_code=poi.item_code
 			left join `tabItem` as itm on itm.name = soi.item_code
-			where po.company = '{0}' and po.docstatus = 1 and so.docstatus = 1 and po.status != 'Closed' and so.status != 'Closed'""".format(filters.get('company'))
+			
+			where po.company = 'S Iqbal Home' and po.docstatus = 1 and
+			so.docstatus = 1 and po.status != 'Closed' and so.status != 'Closed'""".format(filters.get('company'))
 
 		if filters.get('sales_order'):
 			query += " and so.name = '{0}'".format(filters.get('sales_order'))
@@ -217,11 +218,10 @@ def get_data(filters):
 
 		if filters.get('to_date'):
 			query += " and po.transaction_date <= '{0}'".format(filters.get('to_date'))
-		query += " group by poi.fax_no,poi.item_code,soi.fax_no order by po.po_number, so.po_number"
+		query += "group by poi.fax_no,soi.item_code order by po.transaction_date, so.transaction_date, po.po_number, so.po_number"
 
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
-		print(query)
 
 		total_amount1 = 0
 		total_boxes1 = 0
