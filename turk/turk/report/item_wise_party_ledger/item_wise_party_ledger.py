@@ -99,7 +99,7 @@ def get_data(filters):
 				from `tabSales Order` as so
 				left join `tabSales Order Item` as soi on so.name = soi.parent
 				where so.docstatus = 1 and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
-			union
+			union all
 			select 
 				pe.posting_date as date,
 				"Payment Entry" as voucher_type,
@@ -113,6 +113,21 @@ def get_data(filters):
 				pe.paid_amount as credit
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Customer' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
+			union all
+			select 
+				je.posting_date as date,
+				je.voucher_type,
+				je.name as voucher_no,
+				'',
+				'',
+				0,
+				0,
+				0,
+				jea.debit,
+				jea.credit
+				from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent
+				where je.docstatus = 1 and jea.party_type = 'Customer' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
 				order by date
 			""".format(filters.get('company'),filters.get('party'),filters.get('from_date'),filters.get('to_date'))
 		
@@ -145,6 +160,21 @@ def get_data(filters):
 				0 as credit
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Supplier' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
+			union all
+			select 
+				je.posting_date as date,
+				je.voucher_type,
+				je.name as voucher_no,
+				'',
+				'',
+				0,
+				0,
+				0,
+				jea.debit,
+				jea.credit
+				from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent
+				where je.docstatus = 1 and jea.party_type = 'Supplier' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
 				order by date
 			""".format(filters.get('company'),filters.get('party'),filters.get('from_date'),filters.get('to_date'))
 		
