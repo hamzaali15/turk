@@ -62,26 +62,38 @@ def get_data(filters):
 		query = """select posting_date,po_number,voucher_no,debit,credit,voucher_type from (
 		select 
 				pe.posting_date ,			
-					'' as po_number,
-					pe.name as voucher_no,
-					pe.paid_amount as debit,
-					0 as credit,
-					"Payment Entry" as voucher_type
-					from `tabPayment Entry` as pe
-					where pe.docstatus = 1 and pe.party_type = 'Supplier' and pe.company='{0}'
-					and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' and pe.party = '{3}'
-		union
+				'' as po_number,
+				pe.name as voucher_no,
+				pe.paid_amount as debit,
+				0 as credit,
+				"Payment Entry" as voucher_type
+				from `tabPayment Entry` as pe
+				where pe.docstatus = 1 and pe.party_type = 'Supplier' and pe.company='{0}'
+				and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' and pe.party = '{3}'
+		union all
 		select 
 				po.transaction_date as posting_date,
-					po.po_number,
-					po.name as voucher_no,
-					0 as debit,
-					po.rounded_total as credit,
-					"Purchase Order" as voucher_type
-					from `tabPurchase Order` as po
-					where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
-					and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' and po.supplier = '{3}'
-					) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('supplier'))
+				po.po_number,
+				po.name as voucher_no,
+				0 as debit,
+				po.rounded_total as credit,
+				"Purchase Order" as voucher_type
+				from `tabPurchase Order` as po
+				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
+				and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' and po.supplier = '{3}'
+		union all
+		select 
+				je.posting_date,
+				'' as po_number,
+				je.name as voucher_no,
+				jea.debit,
+				jea.credit,
+				je.voucher_type
+				from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent
+				where je.docstatus = 1 and je.company = '{0}'
+				and je.posting_date >= '{1}' and je.posting_date <= '{2}' and jea.party = '{3}'
+				) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('supplier'))
 
 		result = frappe.db.sql(query,as_dict=True)
 

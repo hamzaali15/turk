@@ -197,7 +197,7 @@ def get_data(filters):
 			soi.qty,
 			soi.rate,
 			soi.amount,
-			so.status as delivery
+			so.delivery
 			from 
 			`tabSales Order` as so 	inner join `tabSales Order Item` as soi on so.name = soi.parent
 			left join `tabPurchase Order` as po on so.po_number = po.po_number 
