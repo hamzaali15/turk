@@ -91,7 +91,7 @@ def get_data(filters):
 				je.voucher_type
 				from `tabJournal Entry` as je
 				left join `tabJournal Entry Account` as jea on je.name = jea.parent
-				where je.docstatus = 1 and je.status != 'Closed' and je.company = '{0}'
+				where je.docstatus = 1 and je.company = '{0}'
 				and je.posting_date >= '{1}' and je.posting_date <= '{2}' and jea.party = '{3}'
 				) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('supplier'))
 
