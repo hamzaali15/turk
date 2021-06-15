@@ -36,13 +36,6 @@ def get_columns():
 			"fieldname": "voucher_no",
 			"width": 150
 		},
-		# {
-		# 	"label": "Sales Order",
-		# 	"fieldtype": "Link",
-		# 	"options": "Sales Order",
-		# 	"fieldname": "sales_order",
-		# 	"width": 150
-		# },
 		{
 			"label": "Debit",
 			"fieldtype": "Currency",
@@ -67,28 +60,40 @@ def get_columns():
 def get_data(filters):
 	if filters.get('company'):
 		query = """select posting_date,fax_no,voucher_no,debit,credit,voucher_type from (
-		select 
+			select 
 				pe.posting_date ,			
-					'' as fax_no,
-					pe.name as voucher_no,
-					0 as debit,
-					pe.paid_amount as credit,
-					"Payment Entry" as voucher_type
-					from `tabPayment Entry` as pe
-					where pe.docstatus = 1 and pe.party_type = 'Customer' and pe.company='{0}'
-					and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' and pe.party = '{3}'
-		union
-		select 
+				'' as fax_no,
+				pe.name as voucher_no,
+				0 as debit,
+				pe.paid_amount as credit,
+				"Payment Entry" as voucher_type
+				from `tabPayment Entry` as pe
+				where pe.docstatus = 1 and pe.party_type = 'Customer' and pe.company='{0}'
+				and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' and pe.party = '{3}'
+			union
+			select 
 				so.transaction_date as posting_date,
-					so.fax_no,
-					so.name as voucher_no,
-					so.rounded_total as debit,
-					0 as credit,
-					"Sales Order" as voucher_type
-					from `tabSales Order` as so
-					where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}'
-					and so.transaction_date >= '{1}' and so.transaction_date <= '{2}' and so.customer = '{3}'
-					) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('customer'))
+				so.fax_no,
+				so.name as voucher_no,
+				so.rounded_total as debit,
+				0 as credit,
+				"Sales Order" as voucher_type
+				from `tabSales Order` as so
+				where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}'
+				and so.transaction_date >= '{1}' and so.transaction_date <= '{2}' and so.customer = '{3}'
+			union
+			select 
+				je.posting_date as date,
+				'' as fax_no,
+				je.name as voucher_no,
+				jea.debit,
+				jea.credit,
+				je.voucher_type
+				from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent
+				where je.docstatus = 1 and jea.party_type = 'Customer' and je.company = '{0}' and je.posting_date >= '{1}' 
+				and je.posting_date <= '{2}' and jea.party = '{3}') as t1 
+				order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('customer'))
 
 		result = frappe.db.sql(query,as_dict=True)
 
