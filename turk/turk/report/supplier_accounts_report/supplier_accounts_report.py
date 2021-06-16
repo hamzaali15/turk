@@ -100,6 +100,10 @@ def get_data(filters):
 		data = []
 		balance1 = 0
 		for row in result:
+			if not row.debit:
+				row.debit = 0
+			if not row.credit:
+				row.credit = 0
 			row.balance = row.debit-row.credit
 			balance1 += row.balance
 			row = {

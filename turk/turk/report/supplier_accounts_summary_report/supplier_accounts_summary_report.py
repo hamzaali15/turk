@@ -47,15 +47,21 @@ def get_columns():
 
 def get_data(filters):
 	if filters.get('company'):
-		query = """select 
+		query = """select
 				po.supplier,
 				po.supplier_name,
 				sum(po.rounded_total) as credit,
-				sum(pe.paid_amount) as debit,
-				(sum(pe.paid_amount) - sum(po.rounded_total)) as balance
+				(select sum(pe.paid_amount) from `tabPayment Entry` as pe where pe.docstatus = 1 and
+				pe.party = po.supplier and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' 
+				group by pe.party) as debit,
+				(select sum(jea.credit) from `tabJournal Entry` as je
+				left join `tabJournal Entry Account` as jea on je.name = jea.parent 
+				where je.docstatus = 1 and jea.party = po.supplier and je.posting_date >= '{1}' 
+				and je.posting_date <= '{2}' group by jea.party) as credit1,
+				((select sum(pe.paid_amount) from `tabPayment Entry` as pe 
+				where pe.docstatus = 1 and pe.posting_date >= '{1}' and pe.posting_date <= '{2}'
+				and	pe.party = po.supplier group by pe.party) - sum(po.rounded_total)) as balance
 				from `tabPurchase Order` as po
-				left join `tabPayment Entry Reference` as per on per.reference_name = po.name
-				left join `tabPayment Entry` as pe on pe.name = per.parent
 				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
 				and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' group by po.supplier
 				""".format(filters.get('company'), filters.get('from_date'), filters.get('to_date'))
@@ -63,13 +69,33 @@ def get_data(filters):
 		result = frappe.db.sql(query,as_dict=True)
 
 		data = []
+		total_credit = 0
+		balance1 = 0
 		for row in result:
+			if row.credit1:
+				total_credit = row.credit + row.credit1
+			else:
+				row.credit1 = 0
+				total_credit = row.credit + row.credit1
+
+			if not row.debit:
+				row.debit = 0
+
+			if row.balance and row.credit1:
+				balance1 = row.balance - row.credit1
+			elif row.balance:
+				row.credit = 0
+				balance1 = row.balance - row.credit1
+			elif row.credit:
+				row.balance = 0
+				balance1 = row.balance - row.credit1
+			
 			row = {
 				"supplier": row.supplier,
 				"supplier_name": row.supplier_name,
 				"debit": row.debit,
-				"credit": row.credit,
-				"balance": row.balance
+				"credit": total_credit,
+				"balance": balance1
 			}
 			data.append(row)
 			
