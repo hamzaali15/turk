@@ -91,8 +91,8 @@ def get_data(filters):
 				je.voucher_type
 				from `tabJournal Entry` as je
 				left join `tabJournal Entry Account` as jea on je.name = jea.parent
-				where je.docstatus = 1 and je.company = '{0}'
-				and je.posting_date >= '{1}' and je.posting_date <= '{2}' and jea.party = '{3}'
+				where je.docstatus = 1 and je.company = '{0}' and je.posting_date >= '{1}' and 
+				je.posting_date <= '{2}' and jea.party = '{3}'
 				) as t1 order by posting_date """.format(filters.get('company'), filters.get('from_date'), filters.get('to_date'), filters.get('supplier'))
 
 		result = frappe.db.sql(query,as_dict=True)
@@ -100,6 +100,10 @@ def get_data(filters):
 		data = []
 		balance1 = 0
 		for row in result:
+			if not row.debit:
+				row.debit = 0
+			if not row.credit:
+				row.credit = 0
 			row.balance = row.debit-row.credit
 			balance1 += row.balance
 			row = {
