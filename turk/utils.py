@@ -605,18 +605,15 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 		})
 
 
-# #def validate_date(doc, method):
-# 	if not doc.set_posting_time:
-# 		doctypes = ["Sales Order", "Purchase Order","Quotation"]
-# 		if doc.doctype in doctypes:
-# 			doc.transaction_date = today()
-# 		elif hasattr(doc, 'posting_date'):
-# 			doc.posting_date = today()
-# 		if hasattr(doc, 'posting_time'):
-# 			doc.posting_time = nowtime()
-
-
 @frappe.whitelist()
 def get_sales_order_items(sales_order):
 	sales_order_items = frappe.get_all("Sales Order Item", fields=["name"], filters = {"parent": sales_order, "docstatus": 1})
 	return sales_order_items
+
+@frappe.whitelist()
+def change_pi_status(self, method):
+	pi_doc = frappe.get_doc("Purchase Invoice", self.purchase_invoice)
+	if pi_doc:
+		if self.total_qty == pi_doc.total_qty:
+				pi_doc.status = "Completed"
+				pi_doc.db_update()
