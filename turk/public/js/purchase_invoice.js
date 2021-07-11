@@ -68,12 +68,10 @@ function CalculateSQM(crow, field, cdt, cdn) {
 	}
 }
 
-// function setseries(company) {
-// 	var ret_obj = { twarehouse: "", series: "" };
-// 	switch (company) {
-// 		case "Turk Tiles": ret_obj.series = "TT-PI-"; break;
-// 	}
-// 	// if (cur_frm.doc.supplier == "S-00095") { ret_obj.series = ret_obj.series + "ORT-" }
-// 	if (cur_frm.doc.is_return) { ret_obj.series = ret_obj.series + "RT-" }
-// 	return ret_obj;
-// }
+frappe.listview_settings['Purchase Invoice'] = {
+	get_indicator: function(doc) {
+		if(doc.status ==="Completed") {
+			return [__("Completed"), "green", "status,=,Completed"];
+		}
+	}
+};

@@ -132,6 +132,7 @@ doc_events = {
 		"on_submit": [
 			"turk.hook_events.sales_invoice.update_reserved_qty",
 			"turk.hook_events.sales_invoice.create_purchase_invoices_against_sales_taxes",
+			"turk.utils.change_pi_status"			
 			#"turk.hook_events.sales_invoice.validate_user_warehouse"
 		],
 		"on_cancel": "turk.hook_events.sales_invoice.update_reserved_qty"
