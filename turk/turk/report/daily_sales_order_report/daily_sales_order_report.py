@@ -204,7 +204,7 @@ def get_data(filters):
 			inner join `tabPurchase Order Item` as poi on po.name = poi.parent and soi.item_code=poi.item_code
 			left join `tabItem` as itm on itm.name = soi.item_code
 			
-			where po.company = 'S Iqbal Home' and po.docstatus = 1 and
+			where po.company = '{0}' and po.docstatus = 1 and
 			so.docstatus = 1 and po.status != 'Closed' and so.status != 'Closed'""".format(filters.get('company'))
 
 		if filters.get('sales_order'):
@@ -222,7 +222,7 @@ def get_data(filters):
 
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
-
+	
 		total_amount1 = 0
 		total_boxes1 = 0
 		total_qty1 = 0

@@ -614,6 +614,7 @@ def get_sales_order_items(sales_order):
 def change_pi_status(self, method):
 	pi_doc = frappe.get_doc("Purchase Invoice", self.purchase_invoice)
 	if pi_doc:
-		if self.total_qty == pi_doc.total_qty:
-				pi_doc.status = "Completed"
-				pi_doc.db_update()
+		if pi_doc.docstatus == 1:
+			if self.total_qty == pi_doc.total_qty:
+					pi_doc.delivery_status = "Completed"
+					pi_doc.db_update()

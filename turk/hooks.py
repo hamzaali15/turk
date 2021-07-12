@@ -154,7 +154,7 @@ doc_events = {
 		"validate": "turk.utils.send_followup_sms"
 	},
 	"Purchase Invoice": {
-		#"validate": "turk.utils.validate_date"
+		"validate": "turk.hook_events.purchase_invoice.add_location"
 	},
 	"Purchase Order": {
 		#"validate": "turk.utils.validate_date"
