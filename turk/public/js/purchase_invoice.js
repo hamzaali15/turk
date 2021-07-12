@@ -67,11 +67,3 @@ function CalculateSQM(crow, field, cdt, cdn) {
 		cur_frm.refresh_field("items");
 	}
 }
-
-frappe.listview_settings['Purchase Invoice'] = {
-	get_indicator: function(doc) {
-		if(doc.status ==="Completed") {
-			return [__("Completed"), "green", "status,=,Completed"];
-		}
-	}
-};
