@@ -618,3 +618,12 @@ def change_pi_status(self, method):
 			if self.total_qty == pi_doc.total_qty:
 					pi_doc.delivery_status = "Completed"
 					pi_doc.db_update()
+
+@frappe.whitelist()
+def add_location(self, method):
+	for d in self.items:
+		location_name = ""
+		itm_doc = frappe.db.sql("""select location_name from `tabLocation Item` where parent='{0}'""".format(d.item_code))
+		if itm_doc:
+			location_name += str(itm_doc)
+			d.location_name = location_name

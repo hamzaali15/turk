@@ -126,6 +126,7 @@ doc_events = {
 		"validate": [
 			"turk.hook_events.sales_invoice.validate_discount_while_return",
 			"turk.hook_events.sales_invoice.validate_taxes_and_charges_from_so",
+			"turk.utils.add_location"
 		#	"turk.utils.validate_date"
 		],
 		"before_insert": "turk.hook_events.sales_invoice.set_supplier_details",
@@ -154,7 +155,7 @@ doc_events = {
 		"validate": "turk.utils.send_followup_sms"
 	},
 	"Purchase Invoice": {
-		"validate": "turk.hook_events.purchase_invoice.add_location"
+		"validate": "turk.utils.add_location"
 	},
 	"Purchase Order": {
 		#"validate": "turk.utils.validate_date"
