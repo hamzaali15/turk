@@ -621,7 +621,9 @@ def change_pi_status(self, method):
 
 @frappe.whitelist()
 def add_location(self, method):
-    for d in self.items:
-        itm_doc = frappe.db.sql("""select location_name from `tabLocation Item` where parent='{0}'""".format(d.item_code))
-        if itm_doc:
-            d.location_name = itm_doc[0][0]
+	for d in self.items:
+		location_name = ""
+		itm_doc = frappe.db.sql("""select location_name from `tabLocation Item` where parent='{0}'""".format(d.item_code))
+		if itm_doc:
+			location_name += str(itm_doc)
+			d.location_name = location_name
