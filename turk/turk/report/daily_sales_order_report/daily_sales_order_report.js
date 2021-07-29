@@ -29,12 +29,14 @@ frappe.query_reports["Daily Sales Order Report"] = {
 		{
 			"fieldname": "from_date",
 			"fieldtype": "Date",
-			"label": "From Date"
+			"label": "From Date",
+			"default": frappe.datetime.get_today()
 		},
 		{
 			"fieldname": "to_date",
 			"fieldtype": "Date",
-			"label": "TO Date"
+			"label": "TO Date",
+			"default": frappe.datetime.get_today()
 		}
 	]
 };

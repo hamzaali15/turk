@@ -199,13 +199,11 @@ def get_data(filters):
 			soi.amount,
 			so.delivery
 			from 
-			`tabSales Order` as so 	inner join `tabSales Order Item` as soi on so.name = soi.parent
-			left join `tabPurchase Order` as po on so.po_number = po.po_number 
-			inner join `tabPurchase Order Item` as poi on po.name = poi.parent and soi.item_code=poi.item_code
+			`tabSales Order` as so 	inner join `tabSales Order Item` as soi on so.name = soi.parent			
+ 			left join `tabPurchase Order Item` as poi on soi.fax_no = poi.fax_no and poi.item_code=soi.item_code
+			left join `tabPurchase Order` as po on po.name = poi.parent
 			left join `tabItem` as itm on itm.name = soi.item_code
-			
-			where po.company = '{0}' and po.docstatus = 1 and
-			so.docstatus = 1 and po.status != 'Closed' and so.status != 'Closed'""".format(filters.get('company'))
+			where so.company = '{0}' and so.docstatus = 1 and so.status != 'Closed'""".format(filters.get('company'))
 
 		if filters.get('sales_order'):
 			query += " and so.name = '{0}'".format(filters.get('sales_order'))
@@ -214,12 +212,11 @@ def get_data(filters):
 			query += " and po.name = '{0}'".format(filters.get('po_no'))
 
 		if filters.get('from_date'):
-			query += " and po.transaction_date >= '{0}'".format(filters.get('from_date'))
+			query += " and so.transaction_date >= '{0}'".format(filters.get('from_date'))
 
 		if filters.get('to_date'):
-			query += " and po.transaction_date <= '{0}'".format(filters.get('to_date'))
-		query += "group by poi.fax_no,soi.item_code order by po.transaction_date, so.transaction_date, po.po_number, so.po_number"
-
+			query += " and so.transaction_date <= '{0}'".format(filters.get('to_date'))
+		
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
 	
@@ -322,9 +319,12 @@ def get_data(filters):
 				total_boxes2 += row.boxes
 				total_qty2 += row.qty
 			if(current_value1 == previous_value1):
-				total_amount22 += row.amount1
-				total_boxes22 += row.boxes1
-				total_qty22 += row.qty1
+				if row.amount1:
+					total_amount22 += row.amount1
+				if row.boxes1:
+					total_boxes22 += row.boxes1
+				if row.qty1:
+					total_qty22 += row.qty1
 			
 			if(current_value != "" and previous_value != ""):
 				if(current_value != previous_value):
@@ -347,9 +347,12 @@ def get_data(filters):
 			total_boxes1 += row.boxes
 			total_qty1 += row.qty
 
-			total_amount11 += row.amount1
-			total_boxes11 += row.boxes1
-			total_qty11 += row.qty1
+			if row.amount1:
+				total_amount11 += row.amount1
+			if row.boxes1:
+				total_boxes11 += row.boxes1
+			if row.qty1:
+				total_qty11 += row.qty1
 			
 			row = {
 				"date1": row.date1,
