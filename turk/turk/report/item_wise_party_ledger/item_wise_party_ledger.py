@@ -98,7 +98,7 @@ def get_data(filters):
 				0 as credit
 				from `tabSales Order` as so
 				left join `tabSales Order Item` as soi on so.name = soi.parent
-				where so.docstatus = 1 and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
+				where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
 			union all
 			select 
 				pe.posting_date as date,
@@ -145,7 +145,7 @@ def get_data(filters):
 				poi.amount as credit
 				from `tabPurchase Order` as po
 				left join `tabPurchase Order Item` as poi on po.name = poi.parent
-				where po.docstatus = 1 and po.company = '{0}' and po.supplier = '{1}' and po.transaction_date >= '{2}' and po.transaction_date <= '{3}' 
+				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}' and po.supplier = '{1}' and po.transaction_date >= '{2}' and po.transaction_date <= '{3}' 
 			union all
 			select 
 				pe.posting_date as date,
