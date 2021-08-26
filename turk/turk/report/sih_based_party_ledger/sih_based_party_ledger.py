@@ -236,7 +236,29 @@ def get_data(filters):
 		current_value= ""
 		previous_value=""
 		cur_pre_val=""
+		total_boxes1 = 0
+
 		i=len(result)
+
+		def subTotal():
+			total_row = {
+				"date": "",
+				"voucher_type": "",
+				"voucher_no": "",
+				"shipment_no": "",
+				"po_no": "",
+				"fax_no": "",
+				"item_code": "",
+				"item_name": "<b>"+"Sub Total"+"</b>",
+				"qty": "",
+				"boxes": total_boxes1,
+				"rate": "",
+				"debit": "",
+				"credit": "",
+				"balance": "",
+				"remarks": ""
+			}
+			data.append(total_row)
 
 		def gTotal():
 			total_row1 = {
@@ -262,6 +284,23 @@ def get_data(filters):
 		
 		for row in result:
 			i=i-1
+
+			current_value = row.voucher_no
+			if(cur_pre_val != ""):
+				if(cur_pre_val != current_value):
+					previous_value = cur_pre_val
+			if(previous_value == ""):
+				previous_value = row.voucher_no	
+
+			if(current_value == previous_value):
+				total_boxes1 += row.boxes	
+
+			if(current_value != "" and previous_value != ""):
+				if(current_value != previous_value):
+					subTotal()
+					previous_value = ""
+					cur_pre_val = row.voucher_no
+					total_boxes1 = row.boxes
 
 			row.balance = row.debit - row.credit
 			balance1 += row.balance
