@@ -330,6 +330,7 @@ def get_data(filters):
 			}
 			data.append(row)
 			if(i==0):
+				subTotal()
 				gTotal()
 		return data
 	else:
