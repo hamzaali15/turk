@@ -31,6 +31,18 @@ def get_columns():
 			"width": 150
 		},
 		{
+			"label": "PO No.",
+			"fieldtype": "Data",
+			"fieldname": "po_no",
+			"width": 150
+		},
+		{
+			"label": "FAX No.",
+			"fieldtype": "Data",
+			"fieldname": "fax_no",
+			"width": 150
+		},
+		{
 			"fieldname": "item_code",
 			"fieldtype": "Link",
 			"label": "Item Code",
@@ -78,7 +90,13 @@ def get_columns():
 			"fieldtype": "Currency",
 			"label": "Balance",
 			"width": 150
-		}
+		},
+		{
+			"label": "Terms & Conditions",
+			"fieldtype": "Data",
+			"fieldname": "terms",
+			"width": 150
+		},
 	]
 	return columns
 
@@ -89,13 +107,16 @@ def get_data(filters):
 				so.transaction_date as date,
 				"Sales Order" as voucher_type,
 				so.name as voucher_no,
+				so.po_number,
+				so.fax_no,
 				soi.item_code,
 				soi.item_name,
 				soi.qty,
 				soi.boxes,
 				soi.rate,
 				soi.amount as debit,
-				0 as credit
+				0 as credit,
+				so.terms
 				from `tabSales Order` as so
 				left join `tabSales Order Item` as soi on so.name = soi.parent
 				where so.docstatus = 1 and so.status != 'Closed' and so.company = '{0}' and so.customer = '{1}' and so.transaction_date >= '{2}' and so.transaction_date <= '{3}' 
@@ -106,11 +127,14 @@ def get_data(filters):
 				pe.name as voucher_no,
 				'',
 				'',
+				'',
+				'',
 				0,
 				0,
 				0,
 				0 as debit,
-				pe.paid_amount as credit
+				pe.paid_amount as credit,
+				''
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Customer' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
 			union all
@@ -120,11 +144,14 @@ def get_data(filters):
 				je.name as voucher_no,
 				'',
 				'',
+				'',
+				'',
 				0,
 				0,
 				0,
 				jea.debit,
-				jea.credit
+				jea.credit,
+				''
 				from `tabJournal Entry` as je
 				left join `tabJournal Entry Account` as jea on je.name = jea.parent
 				where je.docstatus = 1 and jea.party_type = 'Customer' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
@@ -136,13 +163,16 @@ def get_data(filters):
 				po.transaction_date as date,
 				"Purchase Order" as voucher_type,
 				po.name as voucher_no,
+				po.po_number,
+				poi.fax_no,
 				poi.item_code,
 				poi.item_name,
 				poi.qty,
 				poi.boxes,
 				poi.rate,
 				0 as debit,
-				poi.amount as credit
+				poi.amount as credit,
+				po.terms
 				from `tabPurchase Order` as po
 				left join `tabPurchase Order Item` as poi on po.name = poi.parent
 				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}' and po.supplier = '{1}' and po.transaction_date >= '{2}' and po.transaction_date <= '{3}' 
@@ -153,11 +183,14 @@ def get_data(filters):
 				pe.name as voucher_no,
 				'',
 				'',
+				'',
+				'',
 				0,
 				0,
 				0,
 				pe.paid_amount as debit,
-				0 as credit
+				0 as credit,
+				''
 				from `tabPayment Entry` as pe
 				where pe.docstatus = 1 and pe.party_type = 'Supplier' and pe.company = '{0}' and pe.party = '{1}' and pe.posting_date >= '{2}' and pe.posting_date <= '{3}'
 			union all
@@ -167,11 +200,14 @@ def get_data(filters):
 				je.name as voucher_no,
 				'',
 				'',
+				'',
+				'',
 				0,
 				0,
 				0,
 				jea.debit,
-				jea.credit
+				jea.credit,
+				''
 				from `tabJournal Entry` as je
 				left join `tabJournal Entry Account` as jea on je.name = jea.parent
 				where je.docstatus = 1 and jea.party_type = 'Supplier' and je.company = '{0}' and jea.party = '{1}' and je.posting_date >= '{2}' and je.posting_date <= '{3}'
@@ -188,13 +224,37 @@ def get_data(filters):
 		current_value= ""
 		previous_value=""
 		cur_pre_val=""
+		total_boxes1 = 0
+
 		i=len(result)
+
+		def subTotal():
+			total_row = {
+				"date": "",
+				"voucher_type": "",
+				"voucher_no": "",
+				"shipment_no": "",
+				"po_no": "",
+				"fax_no": "",
+				"item_code": "",
+				"item_name": "<b>"+"Sub Total"+"</b>",
+				"qty": "",
+				"boxes": total_boxes1,
+				"rate": "",
+				"debit": "",
+				"credit": "",
+				"balance": "",
+				"remarks": ""
+			}
+			data.append(total_row)		
 
 		def gTotal():
 			total_row1 = {
 				"date": "",
 				"voucher_type": "",
 				"voucher_no": "",
+				"po_no": "",
+				"fax_no": "",
 				"item_code": "",
 				"item_name": "<b>"+"Grand Total"+"</b>",
 				"qty": total_qty,
@@ -202,7 +262,8 @@ def get_data(filters):
 				"rate": "",
 				"debit": total_debit,
 				"credit": total_credit,
-				"balance": ""
+				"balance": "",
+				"terms": ""
 			}
 			data.append(total_row1)
 
@@ -210,6 +271,23 @@ def get_data(filters):
 		
 		for row in result:
 			i=i-1
+
+			current_value = row.voucher_no
+			if(cur_pre_val != ""):
+				if(cur_pre_val != current_value):
+					previous_value = cur_pre_val
+			if(previous_value == ""):
+				previous_value = row.voucher_no	
+
+			if(current_value == previous_value):
+				total_boxes1 += row.boxes	
+
+			if(current_value != "" and previous_value != ""):
+				if(current_value != previous_value):
+					subTotal()
+					previous_value = ""
+					cur_pre_val = row.voucher_no
+					total_boxes1 = row.boxes
 
 			row.balance = row.debit - row.credit
 			balance1 += row.balance
@@ -224,6 +302,8 @@ def get_data(filters):
 				"date": row.date,
 				"voucher_type": row.voucher_type,
 				"voucher_no": row.voucher_no,
+				"po_no": row.po_number,
+				"fax_no": row.fax_no,
 				"item_code": row.item_code,
 				"item_name": row.item_name,
 				"qty": row.qty,
@@ -231,10 +311,12 @@ def get_data(filters):
 				"rate": row.rate,
 				"debit": row.debit,
 				"credit": row.credit,
-				"balance": balance1
+				"balance": balance1,
+				"terms": row.terms
 			}
 			data.append(row)
 			if(i==0):
+				subTotal()
 				gTotal()
 		return data
 	else:
