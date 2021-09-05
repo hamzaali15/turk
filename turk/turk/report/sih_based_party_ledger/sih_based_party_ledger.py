@@ -236,7 +236,10 @@ def get_data(filters):
 		current_value= ""
 		previous_value=""
 		cur_pre_val=""
+		total_qty1 = 0
 		total_boxes1 = 0
+		total_debit1 = 0
+		total_credit1 = 0
 
 		i=len(result)
 
@@ -250,11 +253,11 @@ def get_data(filters):
 				"fax_no": "",
 				"item_code": "",
 				"item_name": "<b>"+"Sub Total"+"</b>",
-				"qty": "",
+				"qty": total_qty1,
 				"boxes": total_boxes1,
 				"rate": "",
-				"debit": "",
-				"credit": "",
+				"debit": total_debit1,
+				"credit": total_credit1,
 				"balance": "",
 				"remarks": ""
 			}
@@ -293,14 +296,20 @@ def get_data(filters):
 				previous_value = row.voucher_no	
 
 			if(current_value == previous_value):
-				total_boxes1 += row.boxes	
+				total_qty1 += row.qty
+				total_boxes1 += row.boxes
+				total_debit1 += row.debit
+				total_credit1 += row.credit	
 
 			if(current_value != "" and previous_value != ""):
 				if(current_value != previous_value):
 					subTotal()
 					previous_value = ""
 					cur_pre_val = row.voucher_no
+					total_qty1 = row.qty
 					total_boxes1 = row.boxes
+					total_debit1 = row.debit
+					total_credit1 = row.credit
 
 			row.balance = row.debit - row.credit
 			balance1 += row.balance
