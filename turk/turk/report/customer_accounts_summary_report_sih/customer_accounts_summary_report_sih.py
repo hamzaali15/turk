@@ -50,7 +50,7 @@ def get_data(filters):
 		query = """select
 				so.customer,
 				so.customer_name,
-				sum(so.grand_total) as debit,
+				sum(so.total) as debit,
 				(select sum(pe.paid_amount) from `tabPayment Entry` as pe where pe.docstatus = 1 and
 				pe.party = so.customer and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' 
 				group by pe.party) as credit,
@@ -58,7 +58,7 @@ def get_data(filters):
 				left join `tabJournal Entry Account` as jea on je.name = jea.parent 
 				where je.docstatus = 1 and jea.party = so.customer and je.posting_date >= '{1}' 
 				and je.posting_date <= '{2}' group by jea.party) as debit1,
-				(sum(so.grand_total) - (select sum(pe.paid_amount) from `tabPayment Entry` as pe 
+				(sum(so.total) - (select sum(pe.paid_amount) from `tabPayment Entry` as pe 
 				where pe.docstatus = 1 and pe.posting_date >= '{1}' and pe.posting_date <= '{2}'
 				and	pe.party = so.customer group by pe.party)) as balance
 				from `tabSales Order` as so

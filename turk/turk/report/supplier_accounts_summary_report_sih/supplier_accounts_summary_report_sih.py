@@ -50,7 +50,7 @@ def get_data(filters):
 		query = """select
 				po.supplier,
 				po.supplier_name,
-				sum(po.rounded_total) as credit,
+				sum(po.total) as credit,
 				(select sum(pe.paid_amount) from `tabPayment Entry` as pe where pe.docstatus = 1 and
 				pe.party = po.supplier and pe.posting_date >= '{1}' and pe.posting_date <= '{2}' 
 				group by pe.party) as debit,
@@ -60,7 +60,7 @@ def get_data(filters):
 				and je.posting_date <= '{2}' group by jea.party) as credit1,
 				((select sum(pe.paid_amount) from `tabPayment Entry` as pe 
 				where pe.docstatus = 1 and pe.posting_date >= '{1}' and pe.posting_date <= '{2}'
-				and	pe.party = po.supplier group by pe.party) - sum(po.rounded_total)) as balance
+				and	pe.party = po.supplier group by pe.party) - sum(po.total)) as balance
 				from `tabPurchase Order` as po
 				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'
 				and po.transaction_date >= '{1}' and po.transaction_date <= '{2}' group by po.supplier
