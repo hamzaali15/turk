@@ -76,7 +76,7 @@ def get_data(filters):
 				po.po_number,
 				po.name as voucher_no,
 				0 as debit,
-				po.rounded_total as credit,
+				po.total as credit,
 				"Purchase Order" as voucher_type
 				from `tabPurchase Order` as po
 				where po.docstatus = 1 and po.status != 'Closed' and po.company = '{0}'

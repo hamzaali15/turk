@@ -75,7 +75,7 @@ def get_data(filters):
 				so.transaction_date as posting_date,
 				so.fax_no,
 				so.name as voucher_no,
-				so.grand_total as debit,
+				so.total as debit,
 				0 as credit,
 				"Sales Order" as voucher_type
 				from `tabSales Order` as so
