@@ -98,10 +98,68 @@ def get_data(filters):
 		result = frappe.db.sql(query,as_dict=True)
 
 		data = []
+
+		g_debit = 0
+		g_credit = 0
+		current_value= ""
+		previous_value=""
+		cur_pre_val=""
+		s_credit = 0
+		s_debit = 0
+		i=len(result)
+
+		def subTotal():
+			total_row = {
+				"posting_date": "",
+				"voucher_type": "",
+				"fax_no": "",
+				"voucher_no": "<b>"+"Sub Total"+"</b>",
+				"debit": s_debit,
+				"credit": s_credit,
+				"balance": ""
+			}
+			data.append(total_row)
+
+		def gTotal():
+			total_row1 = {
+				"posting_date": "",
+				"voucher_type": "",
+				"fax_no": "",
+				"voucher_no": "<b>"+"Grand Total"+"</b>",
+				"debit": g_debit,
+				"credit": g_credit,
+				"balance": ""
+			}
+			data.append(total_row1)
+
 		balance1 = 0
 		for row in result:
 			row.balance = row.debit-row.credit
 			balance1 += row.balance
+
+			i=i-1
+			current_value = row.voucher_no
+			if(cur_pre_val != ""):
+				if(cur_pre_val != current_value):
+					previous_value = cur_pre_val
+			if(previous_value == ""):
+				previous_value = row.voucher_no
+			
+			if(current_value == previous_value):
+				s_debit += row.debit
+				s_credit += row.credit
+
+			if(current_value != "" and previous_value != ""):
+				if(current_value != previous_value):
+					subTotal()
+					previous_value = ""
+					cur_pre_val=row.voucher_no
+					s_debit = row.debit
+					s_credit = row.credit	
+			
+			g_debit += row.debit
+			g_credit += row.credit
+
 			row = {
 				"posting_date": row.posting_date,
 				"voucher_type": row.voucher_type,
@@ -112,7 +170,9 @@ def get_data(filters):
 				"balance": balance1,
 			}
 			data.append(row)
-			
+			if(i==0):
+				subTotal()
+				gTotal()
 		return data
 	else:
 		return []
