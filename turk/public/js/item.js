@@ -31,6 +31,9 @@ frappe.ui.form.on('Item', {
 	},
 	grade_tone_desc: function (frm) {
 		frm.set_value('item_name', generate_name(frm));
+	},
+	tone: function (frm) {
+		frm.set_value('item_name', generate_name(frm));
 	}
 });
 
@@ -82,6 +85,9 @@ function generate_name(frm) {
 		}
 		if (frm.doc.grade_tone_desc) {
 			cust_item_name += " " + frm.doc.grade_tone_desc;
+		}
+		if (frm.doc.tone) {
+			cust_item_name += " " + frm.doc.tone;
 		}
 		return cust_item_name;
 	}
