@@ -242,3 +242,50 @@ def split_invoice_between_warehouse(source_name):
 	source_doc.save()
 
 	frappe.msgprint(_("Sales Invoices ({0}) created".format(", ".join(doc_list))))
+
+@frappe.whitelist()
+def validate_sales_invoice(sl, method):
+	if not sl.return_against and not sl.is_return:
+		for res in sl.items:
+			if res.sales_order:
+				sales_order = frappe.get_doc("Sales Order", res.sales_order)
+				if not sales_order.allow_delivery:
+					bill_amt = 0
+					# paid_amt = sales_order.advance_paid
+					paid_amt = 0
+					query = """select sum(rounded_total) - sum(outstanding_amount) as rounded_total
+							from `tabSales Invoice` where name in (select distinct parent from  
+							`tabSales Invoice Item` where sales_order is not null and sales_order = '{0}')
+							and docstatus in (0,1)""".format(sales_order.name)
+
+					if not sl.get("__islocal"):
+						query += " and name !='{0}'".format(sl.name)
+					result = frappe.db.sql(query, as_list=True)
+					if result:
+						if result[0][0]:
+							bill_amt = float(result[0][0])
+					paid_query = """select sum(per.allocated_amount) as paid_amt from `tabPayment Entry Reference` as per
+								inner join `tabPayment Entry` as pe on pe.name = per.parent
+								where per.reference_doctype = 'Sales Invoice' and pe.docstatus = 1 and pe.payment_type = 'Receive' 
+								and per.sales_order = '{0}' """.format(sales_order.name)
+									
+					result = frappe.db.sql(paid_query, as_list=True)
+					if result:
+						if result[0][0]:
+							paid_amt += float(result[0][0])
+
+					paid_query1 = """select sum(per.allocated_amount) as paid_amt from `tabPayment Entry Reference` as per
+								inner join `tabPayment Entry` as pe on pe.name = per.parent
+								where per.reference_doctype = 'Sales Order' and  pe.docstatus = 1 and pe.payment_type = 'Receive' 
+								and per.reference_name = '{0}' """.format(sales_order.name)
+
+					result1 = frappe.db.sql(paid_query1, as_list=True)
+					if result1:
+						if result1[0][0]:
+							paid_amt += float(result1[0][0])
+
+					reaming_amt = abs(paid_amt) - abs(bill_amt)
+					diff = sl.rounded_total - reaming_amt
+					if sl.rounded_total > reaming_amt and diff > 5:
+						frappe.throw(_("Can not allow to Invoice total amount greater then <b>{0}</b>".format(reaming_amt)))
+						break
