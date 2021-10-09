@@ -57,10 +57,10 @@ def get_columns():
 			"width": 150
 		},
 		{
-			"fieldname": "item_name",
-			"fieldtype": "data",
-			"label": "Item Name",
-			"width": 170
+			"label": "Size",
+			"fieldtype": "Data",
+			"fieldname": "size",
+			"width": 150
 		},
 		{
 			"fieldname": "qty",
@@ -68,6 +68,7 @@ def get_columns():
 			"label": "Quantity",
 			"width": 150
 		},
+		
 		{
 			"fieldname": "boxes",
 			"fieldtype": "Float",
@@ -252,7 +253,7 @@ def get_data(filters):
 				"po_no": "",
 				"fax_no": "",
 				"item_code": "",
-				"item_name": "<b>"+"Sub Total"+"</b>",
+				"size": "<b>"+"Sub Total"+"</b>",
 				"qty": total_qty1,
 				"boxes": total_boxes1,
 				"rate": "",
@@ -272,7 +273,7 @@ def get_data(filters):
 				"po_no": "",
 				"fax_no": "",
 				"item_code": "",
-				"item_name": "<b>"+"Grand Total"+"</b>",
+				"size": "<b>"+"Grand Total"+"</b>",
 				"qty": total_qty,
 				"boxes": total_boxes,
 				"rate": "",
@@ -328,14 +329,15 @@ def get_data(filters):
 				"po_no": row.po_number,
 				"fax_no": row.fax_no,
 				"item_code": row.item_code,
-				"item_name": row.item_name,
+				"size": frappe.db.get_value("Item",row.item_code,"size"),
 				"qty": row.qty,
 				"boxes": row.boxes,
 				"rate": row.rate,
 				"debit": row.debit,
 				"credit": row.credit,
 				"balance": balance1,
-				"remarks": row.remarks
+				"remarks": row.remarks,
+				
 			}
 			data.append(row)
 			if(i==0):

@@ -37,6 +37,18 @@ def get_columns():
 			"width": 150
 		},
 		{
+			"label": "Dr. Balance",
+			"fieldtype": "Currency",
+			"fieldname": "dr_balance",
+			"width": 150
+		},
+		{
+			"label": "Cr. Balance",
+			"fieldtype": "Currency",
+			"fieldname": "cr_balance",
+			"width": 150
+		},
+		{
 			"label": "Balance",
 			"fieldtype": "Currency",
 			"fieldname": "balance",
@@ -69,34 +81,48 @@ def get_data(filters):
 		result = frappe.db.sql(query,as_dict=True)
 
 		data = []
+		
 		total_credit = 0
 		balance1 = 0
 		for row in result:
-			if row.credit1:
-				total_credit = row.credit + row.credit1
-			else:
-				row.credit1 = 0
-				total_credit = row.credit + row.credit1
-
+			total_dr_balance = 0
+			total_cr_balance = 0
 			if not row.debit:
 				row.debit = 0
+				balance1 = row.debit - row.credit
+				total_credit = row.credit
+			else:
+				if row.credit1:
+					total_credit = row.credit + row.credit1
+				else:
+					row.credit1 = 0
+					total_credit = row.credit + row.credit1
 
-			if row.balance and row.credit1:
-				balance1 = row.balance - row.credit1
-			elif row.balance:
-				row.credit = 0
-				balance1 = row.balance - row.credit1
-			elif row.credit:
-				row.balance = 0
-				balance1 = row.balance - row.credit1
-			
+				if row.balance and row.credit1:
+					balance1 = row.balance - row.credit1
+				elif row.balance and not row.credit1:
+					row.credit1 = 0
+					balance1 = row.balance - row.credit1
+				elif row.credit1 and not row.balance:
+					row.balance = 0
+					balance1 = row.balance - row.credit1
+			if balance1 >= 0:
+				total_dr_balance = balance1
+				total_cr_balance = 0
+			elif balance1 < 0:
+				total_cr_balance = balance1
+				total_dr_balance = 0
+
 			row = {
 				"supplier": row.supplier,
 				"supplier_name": row.supplier_name,
 				"debit": row.debit,
 				"credit": total_credit,
+				"dr_balance": total_dr_balance,
+				"cr_balance": total_cr_balance,
 				"balance": balance1
 			}
+			
 			data.append(row)
 			
 		return data
