@@ -68,6 +68,7 @@ def get_columns():
 			"label": "Quantity",
 			"width": 150
 		},
+		
 		{
 			"fieldname": "boxes",
 			"fieldtype": "Float",
@@ -253,6 +254,8 @@ def get_data(filters):
 				"fax_no": "",
 				"item_code": "Sub Total",
 				"size": "",
+				"item_code": "",
+				"size": "<b>"+"Sub Total"+"</b>",
 				"qty": total_qty1,
 				"boxes": total_boxes1,
 				"rate": "",
@@ -273,6 +276,8 @@ def get_data(filters):
 				"fax_no": "",
 				"item_code": "Grand Total",
 				"size": "",
+				"item_code": "",
+				"size": "<b>"+"Grand Total"+"</b>",
 				"qty": total_qty,
 				"boxes": total_boxes,
 				"rate": "",
@@ -335,7 +340,8 @@ def get_data(filters):
 				"debit": row.debit,
 				"credit": row.credit,
 				"balance": balance1,
-				"remarks": row.remarks
+				"remarks": row.remarks,
+				
 			}
 			data.append(row)
 			if(i==0):

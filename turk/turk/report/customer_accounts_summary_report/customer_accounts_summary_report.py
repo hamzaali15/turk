@@ -48,12 +48,12 @@ def get_columns():
 			"fieldname": "cr_balance",
 			"width": 150
 		},
-		# {
-		# 	"label": "Balance",
-		# 	"fieldtype": "Currency",
-		# 	"fieldname": "balance",
-		# 	"width": 150
-		# }
+		{
+			"label": "Balance",
+			"fieldtype": "Currency",
+			"fieldname": "balance",
+			"width": 150
+		}
 	]
 	return columns
 
@@ -80,11 +80,12 @@ def get_data(filters):
 
 		result = frappe.db.sql(query,as_dict=True)
 		data = []
-		total_dr_balance = 0
-		total_cr_balance = 0
+		
 		total_debit = 0
 		balance1 = 0
 		for row in result:
+			total_dr_balance = 0
+			total_cr_balance = 0
 			if not row.credit :
 				row.credit = 0
 				balance1 = row.debit - row.credit
@@ -107,9 +108,11 @@ def get_data(filters):
 			if balance1 >= 0:
 				total_dr_balance += balance1
 				total_cr_balance = 0
+				
 			elif balance1 < 0:
 				total_cr_balance += balance1
 				total_dr_balance = 0
+				
 
 			row = {
 				"customer": row.customer,
@@ -118,8 +121,9 @@ def get_data(filters):
 				"credit": row.credit,
 				"dr_balance": total_dr_balance,
 				"cr_balance": total_cr_balance,
-				# "balance": balance1
+			    "balance": balance1
 			}
+		
 			data.append(row)
 		return data
 	else:
