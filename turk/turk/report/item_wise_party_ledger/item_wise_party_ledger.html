@@ -1,4 +1,4 @@
-<h2 class="text-center">{%= __("SIH Based Party Ledger") %}</h2>
+<h2 class="text-center">{%= __("Item Wise Party Ledger") %}</h2>
 <h5 class="text-center">
 	{%= __("Company: ")%}	{%= filters.company %}&emsp;
 	{%= __("Date: ( ")%}	{%= frappe.datetime.str_to_user(filters.from_date) %}
@@ -12,7 +12,7 @@
 	<thead>
 		<tr>
 			<th style="width: 10%">{%= __("Date") %}</th>
-			<th style="width: 12%">{%= __("Shipment No.") %}</th>
+			<th style="width: 12%">{%= __("Voucher No.") %}</th>
 			<th style="width: 10%">{%= __("PO No.") %}</th>
 			<th style="width: 10%">{%= __("FAX No.") %}</th>
 			<th style="width: 10%">{%= __("Item Code") %}</th>
@@ -41,7 +41,7 @@
 					<td style="text-align: right; background-color: green; font-weight: bold;">{%= format_currency(data[i].balance, filters.presentation_currency) %}</td>
 				{% } else { %}
 					<td>{%= frappe.datetime.str_to_user(data[i].date) %}</td>
-					<td>{%= data[i].shipment_no %}</td>
+					<td>{%= data[i].voucher_no %}</td>
 					<td>{%= data[i].po_no %}</td>
 					<td>{%= data[i].fax_no %}</td>
 					<td>{%= data[i].item_code %}</td>

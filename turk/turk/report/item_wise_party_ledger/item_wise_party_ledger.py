@@ -61,10 +61,6 @@ def get_columns():
 			"label": "Quantity",
 			"width": 150
 		},
-
-		
-
-
 		{
 			"fieldname": "boxes",
 			"fieldtype": "Float",
@@ -246,8 +242,8 @@ def get_data(filters):
 				"shipment_no": "",
 				"po_no": "",
 				"fax_no": "",
-				"item_code": "",
-				"size": "<b>"+"Sub Total"+"</b>",
+				"item_code": "Sub Total",
+				"size": "",
 				"qty": total_qty1,
 				"boxes": total_boxes1,
 				"rate": "",
@@ -266,8 +262,8 @@ def get_data(filters):
 				"voucher_no": "",
 				"po_no": "",
 				"fax_no": "",
-				"item_code": "",
-				"size": "<b>"+"Grand Total"+"</b>",
+				"item_code": "Grand Total",
+				"size": "",
 				"qty": total_qty,
 				"boxes": total_boxes,
 				"rate": "",
@@ -314,9 +310,6 @@ def get_data(filters):
 
 			total_boxes += float(row.boxes)
 			total_qty += float(row.qty)
-			
-			#item_size+=frappe.db.get_value('item',row.item_code,'item_name')
-
 
 			row = {
 				"date": row.date,
@@ -332,9 +325,7 @@ def get_data(filters):
 				"debit": row.debit,
 				"credit": row.credit,
 				"balance": balance1,
-				"terms": row.terms,
-				
-
+				"terms": row.terms
 			}
 			data.append(row)
 			if(i==0):
