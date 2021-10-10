@@ -57,10 +57,10 @@ def get_columns():
 			"width": 150
 		},
 		{
-			"fieldname": "item_name",
-			"fieldtype": "data",
-			"label": "Item Name",
-			"width": 170
+			"label": "Size",
+			"fieldtype": "Data",
+			"fieldname": "size",
+			"width": 150
 		},
 		{
 			"fieldname": "qty",
@@ -251,8 +251,8 @@ def get_data(filters):
 				"shipment_no": "",
 				"po_no": "",
 				"fax_no": "",
-				"item_code": "",
-				"item_name": "<b>"+"Sub Total"+"</b>",
+				"item_code": "Sub Total",
+				"size": "",
 				"qty": total_qty1,
 				"boxes": total_boxes1,
 				"rate": "",
@@ -271,8 +271,8 @@ def get_data(filters):
 				"shipment_no": "",
 				"po_no": "",
 				"fax_no": "",
-				"item_code": "",
-				"item_name": "<b>"+"Grand Total"+"</b>",
+				"item_code": "Grand Total",
+				"size": "",
 				"qty": total_qty,
 				"boxes": total_boxes,
 				"rate": "",
@@ -328,7 +328,7 @@ def get_data(filters):
 				"po_no": row.po_number,
 				"fax_no": row.fax_no,
 				"item_code": row.item_code,
-				"item_name": row.item_name,
+				"size": frappe.db.get_value("Item",row.item_code,"size"),
 				"qty": row.qty,
 				"boxes": row.boxes,
 				"rate": row.rate,
