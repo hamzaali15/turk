@@ -1,0 +1,57 @@
+<h2 class="text-center">{%= __("Item Wise Party Ledger") %}</h2>
+<h5 class="text-center">
+	{%= __("Company: ")%}	{%= filters.company %}&emsp;
+	{%= __("Date: ( ")%}	{%= frappe.datetime.str_to_user(filters.from_date) %}
+	{%= __(" to ")%} {%= frappe.datetime.str_to_user(filters.to_date) %}{%= __(")")%}&emsp;
+	{%= __("Party Type: ")%} {%= filters.party_type %}&emsp;
+	{%= __("Party: ")%} {%= filters.party %}&emsp;
+	{%= __("Party Name: ")%} {%= filters.party_name %}
+</h5>
+<hr>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th style="width: 10%">{%= __("Date") %}</th>
+			<th style="width: 12%">{%= __("Voucher No.") %}</th>
+			<th style="width: 10%">{%= __("PO No.") %}</th>
+			<th style="width: 10%">{%= __("FAX No.") %}</th>
+			<th style="width: 10%">{%= __("Item Code") %}</th>
+			<th style="width: 13%">{%= __("Size") %}</th>
+			<th style="width: 10%">{%= __("Debit") %}</th>
+			<th style="width: 10%">{%= __("Credit") %}</th>
+			<th style="width: 15%">{%= __("Balance") %}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for(var i=0, l=data.length; i<l; i++) { %}
+			<tr>
+				{% if(data[i].item_code == "Sub Total" || data[i].item_code == "Grand Total") { %}
+					<td style="background-color: green;"></td>
+					<td style="background-color: green;"></td>
+					<td style="background-color: green;"></td>
+					<td style="background-color: green;"></td>
+					{% if (data[i].item_code == "Sub Total") { %}
+						<td style="background-color: green; font-weight: bold;">{%= __("SUB TOTAL")%}</td>
+					{% } else if (data[i].item_code == "Grand Total") { %}
+						<td style="background-color: green; font-weight: bold;">{%= __("GRAND TOTAL")%}</td>
+					{% } %}
+					<td style="background-color: green;"></td>
+					<td style="text-align: right; background-color: green; font-weight: bold;">{%= format_currency(data[i].debit, filters.presentation_currency) %}</td>
+					<td style="text-align: right; background-color: green; font-weight: bold;">{%= format_currency(data[i].credit, filters.presentation_currency) %}</td>
+					<td style="text-align: right; background-color: green; font-weight: bold;">{%= format_currency(data[i].balance, filters.presentation_currency) %}</td>
+				{% } else { %}
+					<td>{%= frappe.datetime.str_to_user(data[i].date) %}</td>
+					<td>{%= data[i].voucher_no %}</td>
+					<td>{%= data[i].po_no %}</td>
+					<td>{%= data[i].fax_no %}</td>
+					<td>{%= data[i].item_code %}</td>
+					<td>{%= data[i].size %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i].debit, filters.presentation_currency) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i].credit, filters.presentation_currency) %}</td>
+					<td style="text-align: right;">{%= format_currency(data[i].balance, filters.presentation_currency) %}</td>
+				{% } %}
+			</tr>
+		{% } %}
+	</tbody>
+</table>
+<p class="text-right text-muted">Printed On {%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>
