@@ -49,7 +49,8 @@ def get_data(filters):
 
 	query = """select po_number, sum(cust_total_box) as order_qty from `tabPurchase Order` 
 				where company = '{0}' and transaction_date between '{1}' and '{2}' 
-				and po_number is not null and po_number != 'PENDING'""".format(filters.get('company'),filters.get('from_date'),filters.get('to_date'))
+				and po_number is not null and po_number != 'PENDING' 
+				and docstatus = 1""".format(filters.get('company'),filters.get('from_date'),filters.get('to_date'))
 
 	if filters.get('supplier'):
 		query += " and supplier = '{0}'".format(filters.get('supplier'))
@@ -62,7 +63,8 @@ def get_data(filters):
 		query1 = """select sum(boxes) from `tabPurchase Invoice` as pi 
 					inner join `tabPurchase Invoice Item` as pii on pii.parent = pi.name 
 					where company = '{0}' and pi.posting_date between '{1}' and '{2}' 
-					and pi.po_number = '{3}'""".format(filters.get('company'), filters.get('from_date'),
+					and pi.po_number = '{3}' 
+					and pi.docstatus = 1""".format(filters.get('company'), filters.get('from_date'),
 											filters.get('to_date'), res.po_number)
 
 		if filters.get('supplier'):

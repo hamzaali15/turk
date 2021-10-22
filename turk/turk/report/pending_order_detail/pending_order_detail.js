@@ -9,21 +9,21 @@ frappe.query_reports["Pending Order Detail"] = {
 			"label": __("Company"),
 			"fieldtype": "Link",
 			"options": "Company",
-			"default": frappe.defaults.get_user_default("Company"),
+			"default": frappe.user_defaults.company,
 			"reqd": 1
 		},
 		{
 			"fieldname": "from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
-			"default": frappe.sys_defaults.year_start_date,
+			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1),
 			"reqd": 1
 		},
 		{
 			"fieldname": "to_date",
 			"label": __("To Date"),
 			"fieldtype": "Date",
-			"default": frappe.sys_defaults.year_end_date,
+			"default": frappe.datetime.get_today(),
 			"reqd": 1
 		},
 		{
