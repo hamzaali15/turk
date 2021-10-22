@@ -25,91 +25,122 @@ def get_columns():
 			"fieldname": "party",
 			"fieldtype": "Read Only",
 			"label": "Party",
-			"width": 120
+			"width": 180
 		},
 		{
 			"fieldname": "party_name",
 			"fieldtype": "Read Only",
 			"label": "Party Name",
-			"width": 120
-		},
-		{
-			"fieldname": "paid_amount",
-			"fieldtype": "Currency",
-			"label": "Last Payment",
-			"width": 120
+			"width": 200
 		},
 		{
 			"fieldname": "posting_date",
 			"fieldtype": "Date",
 			"label": "Payment Date",
 			"options": "Payment Entry",
-			"width": 120
+			"width": 180
+		},
+		{
+			"fieldname": "paid_amount",
+			"fieldtype": "Currency",
+			"label": "Last Payment",
+			"width": 180
 		},
 		{
 			"fieldname": "dr_balance",
 			"fieldtype": "Currency",
 			"label": "DR(OUTSTANDINGS)",
-			"width": 120
+			"width": 180
 		},
 		{
 			"fieldname": "cr_balance",
 			"fieldtype": "Currency",
 			"label": "CR(OUTSTANDINGS)",
-			"width": 120
+			"width": 180
 		}
 	]
 	return columns
 
 def get_data(filters):
+	data = []
 	if filters.get('party_type') == "Customer":
-		pay_type = "Receive"
-	if filters.get('party_type') == "Supplier":
-		pay_type = "pay"
-	if filters.get('party_type') in ('Customer', 'Supplier'):
-		query = """select
-			p.name,
-			p.posting_date,
-			p.party,
-			p.party_name,
-			p.paid_amount
-			from `tabPayment Entry` as p
-			join (select party, max(posting_date) as MaxDate from `tabPayment Entry` group by party) as pe
-			on p.party = pe.party
-			where p.docstatus = 1 and p.payment_type = '{0}' and p.party_type = '{1}' and p.posting_date = pe.MaxDate
-			group by p.party""".format(pay_type, filters.get('party_type'))
+		customers = frappe.db.sql("select name, customer_name from `tabCustomer`", as_dict=True)
+		for c in customers:
+			payment_e = frappe.db.sql("""select 
+						name, 
+						posting_date, 
+						party, 
+						party_name, 
+						paid_amount 
+						from `tabPayment Entry` 
+						where docstatus = 1 and party_type = 'Customer' and party = '{0}'
+						order by posting_date desc limit 1""".format(c.name), as_dict=True)
 
-		result = frappe.db.sql(query,as_dict=True)
-		data = []
-		
-		for row in result:
-			query1 = """select
-				sum(debit) as debit,
-				sum(credit) as credit
-				from `tabGL Entry`
-				where is_cancelled = 0 and party = '{0}' group by party """.format(row.party)
+			gl_entry = frappe.db.sql("""select 
+					sum(debit) as debit,
+					sum(credit) as credit 
+					from `tabGL Entry` 
+					where is_cancelled = 0 and party_type = 'Customer' and party = '{0}'""".format(c.name), as_dict=True)
 
-			result1 = frappe.db.sql(query1,as_dict=True)
-			for row1 in result1:
-				balance, dr_balance, cr_balance = 0, 0, 0
-				if not row1.credit:
-					row.credit = 0
-				if not row1.debit:
-					row.debit = 0
-				balance = row1.debit - row1.credit
+			dr_balance = cr_balance = 0
+			if gl_entry:
+				if not gl_entry[0].credit:
+					gl_entry[0].credit = 0
+				if not gl_entry[0].debit:
+					gl_entry[0].debit = 0
+				balance = gl_entry[0].debit - gl_entry[0].credit
 				if balance >= 0:
 					dr_balance = balance
 				elif balance < 0:
 					cr_balance = balance
-				row1 = {
-					"posting_date": row.posting_date,
-					"party": row.party,
-					"party_name": row.party_name,
-					"paid_amount": row.paid_amount,
-					"dr_balance": dr_balance,
-					"cr_balance": cr_balance
-				}
-				data.append(row1)
+			row1 = {
+				"posting_date": payment_e[0].posting_date if payment_e else None,
+				"party": c.name,
+				"party_name": c.customer_name,
+				"paid_amount": payment_e[0].paid_amount if payment_e else 0,
+				"dr_balance": dr_balance,
+				"cr_balance": cr_balance
+			}
+			data.append(row1)
 		return data
-	else:
-		frappe.msgprint("Please Select Customer or Supplier as Party Type")
+
+	if filters.get('party_type') == "Supplier":
+		supplier = frappe.db.sql("select name, supplier_name from `tabSupplier`", as_dict=True)
+		for s in supplier:
+			payment_e = frappe.db.sql("""select 
+						name, 
+						posting_date, 
+						party, 
+						party_name, 
+						paid_amount 
+						from `tabPayment Entry` 
+						where docstatus = 1 and party_type = 'Supplier' and party = '{0}'
+						order by posting_date desc limit 1""".format(s.name), as_dict=True)
+
+			gl_entry = frappe.db.sql("""select 
+					sum(debit) as debit,
+					sum(credit) as credit 
+					from `tabGL Entry` 
+					where is_cancelled = 0 and party_type = 'Supplier' and party = '{0}'""".format(s.name), as_dict=True)
+
+			dr_balance = cr_balance = 0
+			if gl_entry:
+				if not gl_entry[0].credit:
+					gl_entry[0].credit = 0
+				if not gl_entry[0].debit:
+					gl_entry[0].debit = 0
+				balance = gl_entry[0].debit - gl_entry[0].credit
+				if balance >= 0:
+					dr_balance = balance
+				elif balance < 0:
+					cr_balance = balance
+			row1 = {
+				"posting_date": payment_e[0].posting_date if payment_e else None,
+				"party": s.name,
+				"party_name": s.supplier_name,
+				"paid_amount": payment_e[0].paid_amount if payment_e else 0,
+				"dr_balance": dr_balance,
+				"cr_balance": cr_balance
+			}
+			data.append(row1)
+		return data

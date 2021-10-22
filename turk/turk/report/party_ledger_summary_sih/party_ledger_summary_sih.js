@@ -9,7 +9,14 @@ frappe.query_reports["Party Ledger Summary SIH"] = {
             "fieldtype": "Link",
             "label": "Party Type",
             "options": "Party Type",
-            "mandatory": 1
+            "reqd": 1,
+            "get_query": function() {
+				return {
+					"filters": {
+						"name": ["in", ['Customer','Supplier']]
+					}
+				}
+			}
         }
 	]
 };
