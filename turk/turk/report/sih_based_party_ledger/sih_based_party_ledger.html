@@ -1,6 +1,6 @@
 <h2 class="text-center">{%= __("SIH Based Party Ledger") %}</h2>
 <h5 class="text-center">
-	{%= __("Company: ")%}	{%= filters.company %}&emsp;
+	
 	{%= __("Date: ( ")%}	{%= frappe.datetime.str_to_user(filters.from_date) %}
 	{%= __(" to ")%} {%= frappe.datetime.str_to_user(filters.to_date) %}{%= __(")")%}&emsp;
 	{%= __("Party Type: ")%} {%= filters.party_type %}&emsp;
