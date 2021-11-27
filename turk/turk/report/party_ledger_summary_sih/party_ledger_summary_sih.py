@@ -47,6 +47,19 @@ def get_columns():
 			"width": 180
 		},
 		{
+			"fieldname": "invoice_posting_date",
+			"fieldtype": "Date",
+			"label": "Last Invoice Date",
+			"options": "Sales Invoice",
+			"width": 180
+		},
+		{
+			"fieldname": "invoice_amount",
+			"fieldtype": "Currency",
+			"label": "Last Invoice Amount",
+			"width": 180
+		},
+		{
 			"fieldname": "dr_balance",
 			"fieldtype": "Currency",
 			"label": "DR(OUTSTANDINGS)",
@@ -67,13 +80,20 @@ def get_data(filters):
 		customers = frappe.db.sql("select name, customer_name from `tabCustomer`", as_dict=True)
 		for c in customers:
 			payment_e = frappe.db.sql("""select 
-						name, 
+						name,
 						posting_date, 
 						party, 
 						party_name, 
 						paid_amount 
 						from `tabPayment Entry` 
 						where docstatus = 1 and party_type = 'Customer' and party = '{0}'
+						order by posting_date desc limit 1""".format(c.name), as_dict=True)
+			
+			invoice = frappe.db.sql("""select 
+						posting_date as si_date, 
+						rounded_total
+						from `tabSales Invoice` 
+						where docstatus = 1 and customer = '{0}'
 						order by posting_date desc limit 1""".format(c.name), as_dict=True)
 
 			gl_entry = frappe.db.sql("""select 
@@ -95,9 +115,11 @@ def get_data(filters):
 					cr_balance = balance
 			row1 = {
 				"posting_date": payment_e[0].posting_date if payment_e else None,
+				"invoice_posting_date": invoice[0].si_date if invoice else None,
 				"party": c.name,
 				"party_name": c.customer_name,
 				"paid_amount": payment_e[0].paid_amount if payment_e else 0,
+				"invoice_amount": invoice[0].rounded_total if invoice else 0,
 				"dr_balance": dr_balance,
 				"cr_balance": cr_balance
 			}
@@ -115,6 +137,13 @@ def get_data(filters):
 						paid_amount 
 						from `tabPayment Entry` 
 						where docstatus = 1 and party_type = 'Supplier' and party = '{0}'
+						order by posting_date desc limit 1""".format(s.name), as_dict=True)
+
+			invoice = frappe.db.sql("""select 
+						posting_date as pi_date, 
+						rounded_total
+						from `tabPurchase Invoice` 
+						where docstatus = 1 and supplier = '{0}'
 						order by posting_date desc limit 1""".format(s.name), as_dict=True)
 
 			gl_entry = frappe.db.sql("""select 
@@ -136,9 +165,11 @@ def get_data(filters):
 					cr_balance = balance
 			row1 = {
 				"posting_date": payment_e[0].posting_date if payment_e else None,
+				"pi_date": invoice[0].first_posting_date if invoice else None,
 				"party": s.name,
 				"party_name": s.supplier_name,
 				"paid_amount": payment_e[0].paid_amount if payment_e else 0,
+				"invoice_amount": invoice.first_paid_amount if invoice else 0,
 				"dr_balance": dr_balance,
 				"cr_balance": cr_balance
 			}
