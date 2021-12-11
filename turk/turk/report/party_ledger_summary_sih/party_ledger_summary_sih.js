@@ -17,6 +17,14 @@ frappe.query_reports["Party Ledger Summary SIH"] = {
 					}
 				}
 			}
-        }
+        },
+		{
+			"fieldname":"account_manager",
+			"fieldtype":"Link",
+			"label":"Acoount Manager",
+			"options":"User",
+			"width":100
+
+		}
 	]
 };

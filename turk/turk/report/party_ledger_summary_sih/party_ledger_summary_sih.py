@@ -22,6 +22,14 @@ def execute(filters=None):
 def get_columns():
 	columns = [
 		{
+			"fieldname":"account_manager",
+			"fieldtype":"Link",
+			"options":"User",
+			"label":"Acoount Manager",
+			"width":100
+
+		},
+		{
 			"fieldname": "party",
 			"fieldtype": "Read Only",
 			"label": "Party",
@@ -76,8 +84,14 @@ def get_columns():
 
 def get_data(filters):
 	data = []
-	if filters.get('party_type') == "Customer":
-		customers = frappe.db.sql("select name, customer_name from `tabCustomer`", as_dict=True)
+	if filters.get('party_type') == "Customer" or filters.get("account_manager"):
+		if filters.get('party_type') == "Customer" and filters.get("account_manager"):
+			account_manager=filters.get("account_manager")
+			customers = frappe.db.sql("select owner,name, customer_name from `tabCustomer` where owner='{0}'".format(account_manager), as_dict=True)
+		elif filters.get('party_type') == "Customer":
+			 customers = frappe.db.sql("select owner,name, customer_name from `tabCustomer`", as_dict=True)
+
+		
 		for c in customers:
 			payment_e = frappe.db.sql("""select 
 						name,
@@ -121,10 +135,13 @@ def get_data(filters):
 				"paid_amount": payment_e[0].paid_amount if payment_e else 0,
 				"invoice_amount": invoice[0].rounded_total if invoice else 0,
 				"dr_balance": dr_balance,
-				"cr_balance": cr_balance
+				"cr_balance": cr_balance,
+				"account_manager":c.owner
 			}
 			data.append(row1)
 		return data
+
+
 
 	if filters.get('party_type') == "Supplier":
 		supplier = frappe.db.sql("select name, supplier_name from `tabSupplier`", as_dict=True)
