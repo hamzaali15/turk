@@ -24,6 +24,7 @@
    "parenttype": null,
    "property": "options",
    "property_type": "Text",
+   "row_name": null,
    "value": "Customer\nItem\nItem Group"
   },
   {
@@ -47,6 +48,7 @@
    "parenttype": null,
    "property": "options",
    "property_type": "Text",
+   "row_name": null,
    "value": "\nGrand Total\nAverage Discount\nCustomerwise Discount\nItemwise Discount\nItem Group wise Discount\nNot Applicable"
   },
   {
@@ -70,6 +72,7 @@
    "parenttype": null,
    "property": "autoname",
    "property_type": "",
+   "row_name": null,
    "value": "AR.####"
   },
   {
@@ -93,6 +96,7 @@
    "parenttype": null,
    "property": "width",
    "property_type": null,
+   "row_name": null,
    "value": "152"
   },
   {
@@ -116,6 +120,7 @@
    "parenttype": null,
    "property": "width",
    "property_type": null,
+   "row_name": null,
    "value": "132"
   },
   {
@@ -139,6 +144,7 @@
    "parenttype": null,
    "property": "width",
    "property_type": null,
+   "row_name": null,
    "value": "176"
   },
   {
@@ -162,6 +168,7 @@
    "parenttype": null,
    "property": "width",
    "property_type": null,
+   "row_name": null,
    "value": "211"
   },
   {
@@ -185,6 +192,7 @@
    "parenttype": null,
    "property": "width",
    "property_type": null,
+   "row_name": null,
    "value": "180"
   },
   {
@@ -208,6 +216,7 @@
    "parenttype": null,
    "property": "in_standard_filter",
    "property_type": "Check",
+   "row_name": null,
    "value": "1"
   },
   {
@@ -231,6 +240,7 @@
    "parenttype": null,
    "property": "in_list_view",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -254,6 +264,7 @@
    "parenttype": null,
    "property": "in_list_view",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -277,6 +288,7 @@
    "parenttype": null,
    "property": "in_list_view",
    "property_type": "Check",
+   "row_name": null,
    "value": "1"
   }
  ],

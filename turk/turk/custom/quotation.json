@@ -22,19 +22,25 @@
    "fieldname": "set_posting_time",
    "fieldtype": "Check",
    "hidden": 1,
+   "hide_border": 0,
+   "hide_days": 0,
+   "hide_seconds": 0,
    "idx": 11,
    "ignore_user_permissions": 0,
    "ignore_xss_filter": 0,
    "in_global_search": 0,
    "in_list_view": 0,
+   "in_preview": 0,
    "in_standard_filter": 0,
    "insert_after": "transaction_date",
    "label": "set_posting_time",
    "length": 0,
+   "mandatory_depends_on": null,
    "modified": "2020-10-17 11:41:17.673714",
    "modified_by": "Administrator",
    "name": "Quotation-set_posting_time",
    "no_copy": 0,
+   "non_negative": 0,
    "options": null,
    "owner": "Administrator",
    "parent": null,
@@ -46,6 +52,7 @@
    "print_hide_if_no_value": 0,
    "print_width": null,
    "read_only": 0,
+   "read_only_depends_on": null,
    "report_hide": 0,
    "reqd": 0,
    "search_index": 0,
@@ -78,6 +85,7 @@
    "parenttype": null,
    "property": "options",
    "property_type": "Text",
+   "row_name": null,
    "value": "QTN-"
   },
   {
@@ -101,6 +109,7 @@
    "parenttype": null,
    "property": "print_hide",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -124,6 +133,7 @@
    "parenttype": null,
    "property": "hidden",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -147,6 +157,7 @@
    "parenttype": null,
    "property": "print_hide",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -170,6 +181,7 @@
    "parenttype": null,
    "property": "hidden",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -193,6 +205,7 @@
    "parenttype": null,
    "property": "print_hide",
    "property_type": "Check",
+   "row_name": null,
    "value": "1"
   },
   {
@@ -216,6 +229,7 @@
    "parenttype": null,
    "property": "hidden",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -239,6 +253,7 @@
    "parenttype": null,
    "property": "default",
    "property_type": "Text",
+   "row_name": null,
    "value": "1"
   },
   {
@@ -262,6 +277,7 @@
    "parenttype": null,
    "property": "default_print_format",
    "property_type": "Data",
+   "row_name": null,
    "value": "TC Quot"
   }
  ],

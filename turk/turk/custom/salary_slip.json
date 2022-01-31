@@ -24,6 +24,7 @@
    "parenttype": null,
    "property": "print_hide",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   },
   {
@@ -47,6 +48,7 @@
    "parenttype": null,
    "property": "hidden",
    "property_type": "Check",
+   "row_name": null,
    "value": "0"
   }
  ],
