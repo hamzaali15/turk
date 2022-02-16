@@ -35,6 +35,25 @@ frappe.ui.form.on("Sales Invoice", "onload", function (frm, cdt, cdn) {
 	});
 });
 
+frappe.ui.form.on("Sales Invoice Item", {
+	discount: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		if (d.list_rate) {
+			var disc_amount = d.list_rate * (d.discount/100);
+			d.rate = d.list_rate - disc_amount;
+			frm.refresh_fields();
+		}
+	},
+	list_rate: function (frm, cdt, cdn) {
+		var d = locals[cdt][cdn];
+		if (d.discount) {
+			var disc_amount = d.list_rate * (d.discount/100);
+			d.rate = d.list_rate - disc_amount;
+			frm.refresh_fields();
+		}
+	}
+});
+
 frappe.ui.form.on("Sales Invoice", "validate", function (frm, cdt, cdn) {
 	if (frm.doc.docstatus == 0) {
 		validateBoxes(frm);
