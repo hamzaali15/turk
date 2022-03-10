@@ -13,19 +13,8 @@ def validate_sales_order(pe, method):
 			if reference.sales_order != so:
 				reference.sales_order = so
 
-
-# def validate_salaryslip_amount(pe, method):
-# 	if pe.salary_slip_id :
-# 		rounded_total = frappe.db.get_value("Salary Slip", pe.salary_slip_id, "rounded_total")
-# 		if rounded_total < pe.paid_amount :
-# 			frappe.throw(_("Payment cannot Excceed from Salary Slip Amount {0}").format(rounded_total))
-
-
-# def update_salaryslip_status(pe, method):
-# 	if method == "on_submit":
-# 		slipsatus = "Salary Paid"
-# 	elif method == "on_cancel":
-# 		slipsatus = "Not Paid"
-# 	if pe.salary_slip_id:
-# 		frappe.db.sql("""update `tabSalary Slip` set payment_status =%s
-# 				where name=%s""",(slipsatus,pe.salary_slip_id))
+@frappe.whitelist()
+def get_party_primary_role(party_type, party):
+	doc = frappe.get_list('Party Link', filters={ party_type: party }, fields= "primary_role")
+	if doc:
+		return doc[0].primary_role
