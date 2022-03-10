@@ -4,8 +4,6 @@
 frappe.ui.form.on("Payment Entry", {
 	onload: function (frm) {
 		if (frm.doc.docstatus == 0) {
-			// var ret_obj = setseries(frm.doc.company);
-			// frm.set_value("naming_series", ret_obj.series);
 			$.each(frm.doc.references || [], function (i, d) {
 				get_sales_order_owner(d.reference_doctype, d.reference_name, d);
 			});
@@ -18,13 +16,9 @@ frappe.ui.form.on("Payment Entry", {
 				frappe.validated = false;
 				return;
 			}
-			// var ret_obj = setseries(frm.doc.company);
-			// cur_frm.set_value("naming_series", ret_obj.series);
 		}
 	},
 	company: function (frm) {
-		// var ret_obj = setseries(frm.doc.company);
-		// frm.set_value("naming_series", ret_obj.series);
 		link_si_to_so(frm);
 	},
 	references_on_form_rendered: function (frm) {
@@ -32,7 +26,6 @@ frappe.ui.form.on("Payment Entry", {
 	},
 	mode_of_payment: function (frm) {
 		frm.events.set_total_allocated_amount(frm);
-
 		for (var row of frm.doc.references) {
 			if (row.reference_doctype == "Sales Invoice" || row.reference_doctype == "Sales Order") {
 				if (row.reference_doctype == "Sales Invoice") {
@@ -47,6 +40,24 @@ frappe.ui.form.on("Payment Entry", {
 			}
 		}
 	},
+	party: function (frm) {
+		if (frm.doc.party) {
+			frappe.call({
+				method: "turk.hook_events.payment_entry.get_party_primary_role",
+				args: {
+					party_type: frm.doc.party_type,
+					party: frm.doc.party
+				},
+				callback: function (r) {
+					frm.doc.primary_role = r.message
+					frm.refresh_field('primary_role')
+					if (frm.doc.party_type != frm.doc.primary_role && frm.doc.primary_role) {
+						frappe.msgprint('Party Type and Primary Role does not match, please double check your transaction!')
+					}
+				}
+			})
+		}
+	}
 });
 
 frappe.ui.form.on('Payment Entry Reference', {
@@ -82,9 +93,7 @@ function get_sales_order(row, doctype, fieldname) {
 }
 
 function link_si_to_so(frm) {
-	// var doctypes = ["Sales Invoice", "Sales Order", "Journal Entry"];
 	for (var reference of frm.get_field("references").grid.grid_rows) {
-
 		if (reference.get_field("reference_doctype").value == "Sales Invoice") {
 			var fieldname = "cust_sales_order_number";
 			frappe.db.get_value("Sales Invoice", reference.get_field("reference_name").value, fieldname, function (value) {
@@ -97,14 +106,6 @@ function link_si_to_so(frm) {
 		}
 	}
 }
-
-// function setseries(company) {
-// 	var ret_obj = { twarehouse: "", series: "" };
-// 	switch (company) {
-// 		case "Turk Tiles": ret_obj.series = "TT-PE-"; break;
-// }
-// 	return ret_obj;
-// }
 
 function get_sales_order_owner(doctype, docnumber, row) {
 	var fieldfetch = "";

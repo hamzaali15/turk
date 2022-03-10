@@ -115,10 +115,7 @@ doctype_js = {
 
 doc_events = {
 	"Sales Order": {
-		"validate": [
-			"turk.hook_events.sales_order.set_average_valuation_rate",
-		#	"turk.utils.validate_date"
-		],
+		"validate": "turk.hook_events.sales_order.set_average_valuation_rate",
 		"before_submit": "turk.hook_events.sales_order.unset_needs_approval",
 		"before_update_after_submit": "turk.hook_events.sales_order.validate_items_rate_and_update_boxes"
 	},
@@ -128,50 +125,31 @@ doc_events = {
 			"turk.hook_events.sales_invoice.validate_taxes_and_charges_from_so",
 			"turk.utils.add_location",
 			"turk.hook_events.sales_invoice.validate_sales_invoice"
-		#	"turk.utils.validate_date"
 		],
 		"before_insert": "turk.hook_events.sales_invoice.set_supplier_details",
 		"on_submit": [
 			"turk.hook_events.sales_invoice.update_reserved_qty",
 			"turk.hook_events.sales_invoice.create_purchase_invoices_against_sales_taxes",
-			# "turk.utils.change_pi_status"			
-			#"turk.hook_events.sales_invoice.validate_user_warehouse"
+			"turk.hook_events.party_link.create_invoice_adj_jv"
 		],
-		"on_cancel": "turk.hook_events.sales_invoice.update_reserved_qty"
+		"on_cancel": [
+			"turk.hook_events.sales_invoice.update_reserved_qty",
+			"turk.hook_events.party_link.cancel_adjusted_jv"
+		]
 	},
 	"Payment Entry": {
-		"validate": [
-			"turk.hook_events.payment_entry.validate_sales_order",
-			# "turk.hook_events.payment_entry.validate_salaryslip_amount",
-			#"turk.utils.validate_date"
-		],
-		# "on_submit": "turk.hook_events.payment_entry.update_salaryslip_status",
-		# "on_cancel": "turk.hook_events.payment_entry.update_salaryslip_status"
-	},
-	"Stock Entry": {
-		#"validate": "turk.utils.validate_date",
-		#"on_submit": "turk.hook_events.stock_entry.validate_user_warehouse"
+		"validate": "turk.hook_events.payment_entry.validate_sales_order"
 	},
 	"Opportunity": {
 		"validate": "turk.utils.send_followup_sms"
 	},
-	"Purchase Invoice": {
-		"validate": "turk.utils.add_location"
+	"Purchase Invoice" :{
+		"validate": "turk.utils.add_location",
+		"on_submit": "turk.hook_events.party_link.create_invoice_adj_jv",
+		"on_cancel": "turk.hook_events.party_link.cancel_adjusted_jv"
 	},
-	"Purchase Order": {
-		#"validate": "turk.utils.validate_date"
-	},
-	"Purchase Receipt": {
-		#"validate": "turk.utils.validate_date"
-	},
-	"Stock Reconciliation": {
-		#"validate": "turk.utils.validate_date"
-	},
-	"Quotation": {
-		#"validate": "turk.utils.validate_date"
-	# },
-	# "Journal Entry": {
-	# 	"before_save": "turk.hook_events.journal_entry.set_name"
+	"Journal Entry" :{
+		"on_cancel" : "turk.hook_events.party_link.prevent_linked_jv_cancellation"
 	}
 }
 
