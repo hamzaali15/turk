@@ -187,6 +187,10 @@ jenv = {
 
 # before_tests = "turk.install.before_tests"
 
+override_doctype_class = {
+	'Journal Entry': 'turk.hook_events.override_journal_entry.OverrideJournalEntry',
+}
+
 # Overriding Methods
 # ------------------------------
 #
