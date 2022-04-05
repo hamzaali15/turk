@@ -12,9 +12,3 @@ def validate_sales_order(pe, method):
 				so = reference.reference_name
 			if reference.sales_order != so:
 				reference.sales_order = so
-
-@frappe.whitelist()
-def get_party_primary_role(party_type, party):
-	doc = frappe.get_list('Party Link', filters={ party_type: party }, fields= "primary_role")
-	if doc:
-		return doc[0].primary_role
