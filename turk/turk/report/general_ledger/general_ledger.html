@@ -1,5 +1,5 @@
-<h2 class="text-center">{%= __("Statement of Account") %}</h2>
-<h4 class="text-center">
+<h2 class="text-center" style="margin:0 0 4px">{%= __("Statement of Account") %}</h2>
+<h4 class="text-center" style="margin:0 0 4px">
 	{% if (filters.party_name) { %}
 		{%= filters.party_name %}
 	{% } else if (filters.party && filters.party.length) { %}
@@ -10,7 +10,7 @@
 </h4>
 
 {% if (filters.party_type == "Customer" && filters.party && filters.party.length == 1) { %}
-<h6 class="text-center">
+<h6 class="text-center" style="margin:0 0 4px">
 	{%= __("Customer Code") %}: {%= filters.party[0] %}
 	{% if (filters.customer_group) { %}
 		&nbsp;&nbsp;|&nbsp;&nbsp;{%= __("Customer Group") %}: {%= filters.customer_group %}
@@ -18,25 +18,25 @@
 </h6>
 {% } %}
 
-<h6 class="text-center">
-	{% if (filters.tax_id) { %}
+{% if (filters.tax_id) { %}
+<h6 class="text-center" style="margin:0 0 4px">
 	{%= __("Tax Id: ")%}	{%= filters.tax_id %}
-	{% } %}
 </h6>
+{% } %}
 
-<h5 class="text-center">
+<h5 class="text-center" style="margin:4px 0">
 	{%= frappe.datetime.str_to_user(filters.from_date) %}
 	{%= __("to") %}
 	{%= frappe.datetime.str_to_user(filters.to_date) %}
 </h5>
-<hr>
+<hr style="margin:4px 0">
 <div class="show-filters">
 		{% if subtitle %}
 			{{ subtitle }}
 			<hr>
 		{% endif %}
 </div>
-<table class="table table-bordered">
+<table class="table table-bordered" style="font-size:15px; font-weight:bold">
 	<thead>
 		<tr>
 			<th style="width: 12%">{%= __("Date") %}</th>
@@ -49,10 +49,11 @@
 	</thead>
 	<tbody>
 		{% for(var i=0, l=data.length; i<l; i++) { %}
-			<tr>
+			{% var is_cn = data[i].posting_date && data[i].voucher_type == "Sales Invoice" && flt(data[i].credit) > 0 && !flt(data[i].debit); %}
+			<tr {% if(is_cn) { %} style="color:#d00000" {% } %}>
 			{% if(data[i].posting_date) { %}
 				<td>{%= frappe.datetime.str_to_user(data[i].posting_date) %}</td>
-				<td>{%= data[i].voucher_type %}
+				<td>{%= is_cn ? __("Credit Note") : data[i].voucher_type %}
 					<br>{%= data[i].voucher_no %}
 				</td>
 				{% var longest_word = cstr(data[i].remarks).split(" ").reduce((longest, word) => word.length > longest.length ? word : longest, ""); %}
@@ -64,31 +65,31 @@
 					{% } %}
 
 					{% if(data[i].remarks) { %}
-						<br>{%= __("Remarks") %}: {%= data[i].remarks %}
+						{%= __("Remarks") %}: {%= data[i].remarks %}
 					{% } else if(data[i].bill_no) { %}
-						<br>{%= __("Supplier Invoice No") %}: {%= data[i].bill_no %}
+						{%= __("Supplier Invoice No") %}: {%= data[i].bill_no %}
 					{% } %}
 					</span>
 				</td>
 				<td style="text-align: right">
-					{%= format_currency(data[i].debit, filters.presentation_currency || data[i].account_currency) %}
+					{%= format_currency(data[i].debit, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 				<td style="text-align: right">
-					{%= format_currency(data[i].credit, filters.presentation_currency || data[i].account_currency) %}
+					{%= format_currency(data[i].credit, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 			{% } else { %}
 				<td></td>
 				<td></td>
 				<td><b>{%= frappe.format(data[i].account, {fieldtype: "Link"}) || "&nbsp;" %}</b></td>
 				<td style="text-align: right">
-					{%= data[i].account && format_currency(data[i].debit, filters.presentation_currency || data[i].account_currency) %}
+					{%= data[i].account && format_currency(data[i].debit, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 				<td style="text-align: right">
-					{%= data[i].account && format_currency(data[i].credit, filters.presentation_currency || data[i].account_currency) %}
+					{%= data[i].account && format_currency(data[i].credit, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 			{% } %}
 				<td style="text-align: right">
-					{%= format_currency(data[i].balance, filters.presentation_currency || data[i].account_currency) %}
+					{%= format_currency(data[i].balance, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 			</tr>
 		{% } %}
