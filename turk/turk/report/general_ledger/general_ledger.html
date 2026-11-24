@@ -88,7 +88,7 @@
 					{%= data[i].account && format_currency(data[i].credit, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 			{% } %}
-				<td style="text-align: right">
+				<td style="text-align: right; color: #000">
 					{%= format_currency(data[i].balance, filters.presentation_currency || data[i].account_currency, 0) %}
 				</td>
 			</tr>
