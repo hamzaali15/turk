@@ -49,7 +49,7 @@
 	</thead>
 	<tbody>
 		{% for(var i=0, l=data.length; i<l; i++) { %}
-			{% var is_cn = data[i].posting_date && data[i].voucher_type == "Sales Invoice" && flt(data[i].credit) > 0 && !flt(data[i].debit); %}
+			{% var is_cn = data[i].posting_date && data[i].is_return; %}
 			<tr>
 			{% if(data[i].posting_date) { %}
 				<td style="{% if(is_cn) { %}color:#d00000 !important;{% } %}">{%= frappe.datetime.str_to_user(data[i].posting_date) %}</td>

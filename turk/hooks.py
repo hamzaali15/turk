@@ -115,6 +115,7 @@ doctype_js = {
 
 override_whitelisted_methods = {
 	"frappe.desk.query_report.get_script": "turk.hook_events.query_report.get_script",
+	"frappe.desk.query_report.run": "turk.hook_events.query_report.run",
 }
 
 doc_events = {
